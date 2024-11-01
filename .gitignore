@@ -1,0 +1,44 @@
+# Node.js y npm
+/venv/
+
+C:\Users\mauro\OneDrive\Escritorio\proyecto\venv
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+next/
+# Configuración de entorno
+front/.env
+front/.env.local
+backend/.env
+backend/.env.local
+backend/node_modules
+front/node_modules
+# Directorios de salida de build
+dist/
+build/
+.next
+# Archivos de logs
+logs/
+*.log
+*.log.*
+
+# Configuración de IDEs y editores
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# MacOS y sistema operativo específico
+.DS_Store
+Thumbs.db
+
+# Archivos de pruebas y cobertura
+coverage/
+.jest/
+.nyc_output/
+
+# Otros archivos de configuración y cache
+.cache/
+.parcel-cache/
