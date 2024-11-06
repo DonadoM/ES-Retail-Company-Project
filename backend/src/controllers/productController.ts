@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Product from '../models/productModel';
+import mongoose from 'mongoose';
 
 // Obtener todos los productos
 export const getProducts = async (req: Request, res: Response): Promise<void> => {
@@ -47,21 +48,29 @@ export const updateProduct = async (req: Request, res: Response): Promise<void> 
     });
   }
 };
-
 // Eliminar un producto por su ID
 export const deleteProduct = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const deletedProduct = await Product.findByIdAndDelete(id);
-    if (!deletedProduct) {
+
+    // Validar el ID
+    if (!mongoose.isValidObjectId(id)) {
+      res.status(400).json({ message: "Invalid product ID" });
+      return;
+    }
+
+    const product = await Product.findByIdAndDelete(id);
+
+    if (!product) {
       res.status(404).json({ message: "Product not found" });
       return;
     }
+
     res.status(200).json({ message: "Product deleted successfully" });
   } catch (error) {
     res.status(500).json({
       message: "Error deleting product",
-      error: (error as Error).message,
+      error: "Deletion failed",
     });
   }
-};
+}

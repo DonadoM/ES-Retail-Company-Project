@@ -1,154 +1,190 @@
-import request from "supertest";
-import express, { Express } from "express";
+import { Request, Response } from "express";
+import mongoose from "mongoose";
+import Product from "../models/productModel";
 import {
   getProducts,
   createProduct,
   updateProduct,
   deleteProduct,
 } from "../controllers/productController";
-import Product from "../models/productModel";
 
 jest.mock("../models/productModel");
 
-const app: Express = express();
-app.use(express.json());
-
-app.get("/api/products", getProducts);
-app.post("/api/products", createProduct);
-app.put("/api/products/:id", updateProduct);
-app.delete("/api/products/:id", deleteProduct);
-
 describe("Product Controller", () => {
+  let req: Partial<Request>;
+  let res: Partial<Response>;
+  let jsonMock: jest.Mock;
+  let statusMock: jest.Mock;
+
   beforeEach(() => {
+    jsonMock = jest.fn();
+    statusMock = jest.fn().mockReturnThis();
+    res = { status: statusMock, json: jsonMock };
+    req = {
+      params: {},
+      body: {},
+    };
     jest.clearAllMocks();
   });
 
-  const mockProductData = {
-    name: "Product 1",
-    description: "Description 1",
-    price: 100,
-    category: "Category 1",
-    stock: 10,
-  };
-
-  const checkResponse = (response: any, expectedStatus: number, expectedBody: any) => {
-    expect(response.status).toBe(expectedStatus);
-    expect(response.body).toEqual(expectedBody);
-  };
-
   describe("getProducts", () => {
-    it("should return an array of products", async () => {
-      const mockData = [
-        mockProductData,
-        { ...mockProductData, name: "Product 2", price: 200 },
-      ];
-      (Product.find as jest.Mock).mockResolvedValue(mockData);
+    it("should return a list of products", async () => {
+      const products = [{ name: "Product1" }, { name: "Product2" }];
+      (Product.find as jest.Mock).mockResolvedValue(products);
 
-      const response = await request(app).get("/api/products");
+      await getProducts(req as Request, res as Response);
 
-      checkResponse(response, 200, mockData);
+      expect(Product.find).toHaveBeenCalled();
+      expect(statusMock).toHaveBeenCalledWith(200);
+      expect(jsonMock).toHaveBeenCalledWith(products);
     });
 
-    it("should return a 500 error if retrieval fails", async () => {
-      (Product.find as jest.Mock).mockRejectedValue(new Error("Database error"));
+    it("should handle errors when fetching products", async () => {
+      const error = new Error("Database error");
+      (Product.find as jest.Mock).mockRejectedValue(error);
 
-      const response = await request(app).get("/api/products");
+      await getProducts(req as Request, res as Response);
 
-      checkResponse(response, 500, {
-        message: "Error al obtener los productos", // Este mensaje debe coincidir con el controlador
-        error: "Database error",
+      expect(Product.find).toHaveBeenCalled();
+      expect(statusMock).toHaveBeenCalledWith(500);
+      expect(jsonMock).toHaveBeenCalledWith({
+        message: "Error al obtener los productos",
+        error: error.message,
       });
     });
   });
 
   describe("createProduct", () => {
-    it("should create a new product and return it", async () => {
-      const mockData = { ...mockProductData, _id: "newId" };
-      (Product.prototype.save as jest.Mock).mockResolvedValue(mockData);
+    it("should create a new product", async () => {
+      req.body = { name: "New Product" };
+      const savedProduct = { _id: "1", name: "New Product" };
 
-      const response = await request(app).post("/api/products").send(mockProductData);
+      // Mock the save method on the Product prototype
+      jest.spyOn(Product.prototype, "save").mockResolvedValue(savedProduct);
 
-      checkResponse(response, 201, {
-        message: "Product created successfully", // Este mensaje debe coincidir con el controlador
-        product: mockData,
+      await createProduct(req as Request, res as Response);
+
+      expect(statusMock).toHaveBeenCalledWith(201);
+      expect(jsonMock).toHaveBeenCalledWith({
+        message: "Product created successfully",
+        product: savedProduct,
       });
     });
 
-    it("should return a 400 error if creation fails", async () => {
-      (Product.prototype.save as jest.Mock).mockRejectedValue(new Error("Database error"));
+    it("should handle errors when creating a product", async () => {
+      const error = new Error("Creation error");
+      req.body = { name: "Invalid Product" };
 
-      const response = await request(app).post("/api/products").send(mockProductData);
+      // Mock the save method to throw an error
+      jest.spyOn(Product.prototype, "save").mockRejectedValue(error);
 
-      checkResponse(response, 400, {
-        message: "Error al crear el producto", // Este mensaje debe coincidir con el controlador
-        error: "Database error",
+      await createProduct(req as Request, res as Response);
+
+      expect(statusMock).toHaveBeenCalledWith(400);
+      expect(jsonMock).toHaveBeenCalledWith({
+        message: "Error al crear el producto",
+        error: error.message,
       });
     });
   });
 
   describe("updateProduct", () => {
-    it("should update a product and return a success message", async () => {
-      const mockUpdatedProduct = { ...mockProductData, _id: "1" };
-      (Product.findByIdAndUpdate as jest.Mock).mockResolvedValue(mockUpdatedProduct);
+    it("should update a product by ID", async () => {
+      req.params = { id: "1" };
+      req.body = { name: "Updated Product" };
+      const updatedProduct = { _id: "1", name: "Updated Product" };
+      (Product.findByIdAndUpdate as jest.Mock).mockResolvedValue(
+        updatedProduct
+      );
 
-      const response = await request(app).put("/api/products/1").send(mockProductData);
+      await updateProduct(req as Request, res as Response);
 
-      checkResponse(response, 200, {
-        message: "Product updated successfully", // Este mensaje debe coincidir con el controlador
-        product: mockUpdatedProduct, // Asegúrate de devolver el producto actualizado
+      expect(Product.findByIdAndUpdate).toHaveBeenCalledWith("1", req.body, {
+        new: true,
+      });
+      expect(statusMock).toHaveBeenCalledWith(200);
+      expect(jsonMock).toHaveBeenCalledWith({
+        message: "Product updated successfully",
+        product: updatedProduct,
       });
     });
 
-    it("should return a 404 error if product not found", async () => {
+    it("should return 404 if product is not found", async () => {
+      req.params = { id: "1" };
+      req.body = { name: "Updated Product" };
       (Product.findByIdAndUpdate as jest.Mock).mockResolvedValue(null);
 
-      const response = await request(app).put("/api/products/1").send(mockProductData);
+      await updateProduct(req as Request, res as Response);
 
-      checkResponse(response, 404, {
-        message: "Product not found", // Este mensaje debe coincidir con el controlador
-      });
+      expect(statusMock).toHaveBeenCalledWith(404);
+      expect(jsonMock).toHaveBeenCalledWith({ message: "Product not found" });
     });
 
-    it("should return a 500 error if update fails", async () => {
-      (Product.findByIdAndUpdate as jest.Mock).mockRejectedValue(new Error("Database error"));
+    it("should handle errors when updating a product", async () => {
+      const error = new Error("Update failed");
+      req.params = { id: "1" };
+      req.body = { name: "Updated Product" };
+      (Product.findByIdAndUpdate as jest.Mock).mockRejectedValue(error);
 
-      const response = await request(app).put("/api/products/1").send(mockProductData);
+      await updateProduct(req as Request, res as Response);
 
-      checkResponse(response, 500, {
-        message: "Error updating product", // Este mensaje debe coincidir con el controlador
-        error: "Database error",
+      expect(statusMock).toHaveBeenCalledWith(500);
+      expect(jsonMock).toHaveBeenCalledWith({
+        message: "Error updating product",
+        error: error.message,
       });
     });
   });
 
   describe("deleteProduct", () => {
-    it("should delete a product and return a success message", async () => {
-      (Product.findByIdAndDelete as jest.Mock).mockResolvedValue({});
-
-      const response = await request(app).delete("/api/products/1");
-
-      checkResponse(response, 200, {
-        message: "Product deleted successfully", // Este mensaje debe coincidir con el controlador
+    it("should delete a product by ID", async () => {
+      req.params = { id: "507f191e810c19729de860ea" }; // Valid ObjectId
+      (Product.findByIdAndDelete as jest.Mock).mockResolvedValue({
+        _id: "507f191e810c19729de860ea",
       });
+
+      await deleteProduct(req as Request, res as Response);
+
+      expect(Product.findByIdAndDelete).toHaveBeenCalledWith(
+        "507f191e810c19729de860ea"
+      );
+      expect(statusMock).toHaveBeenCalledWith(200);
+      expect(jsonMock).toHaveBeenCalledWith({
+        message: "Product deleted successfully",
+      });
+    });
+
+    it("should return 404 if product is not found", async () => {
+      req.params = { id: "507f191e810c19729de860ea" };
+      (Product.findByIdAndDelete as jest.Mock).mockResolvedValue(null);
+
+      await deleteProduct(req as Request, res as Response);
+
+      expect(statusMock).toHaveBeenCalledWith(404);
+      expect(jsonMock).toHaveBeenCalledWith({ message: "Product not found" });
+    });
+
+    it("should return 400 if the product ID is invalid", async () => {
+      req.params = { id: "invalid-id" };
+
+      await deleteProduct(req as Request, res as Response);
+
+      expect(statusMock).toHaveBeenCalledWith(400);
+      expect(jsonMock).toHaveBeenCalledWith({ message: "Invalid product ID" });
     });
 
     it("should return a 500 error if deletion fails", async () => {
-      (Product.findByIdAndDelete as jest.Mock).mockRejectedValue(new Error("Database error"));
+      req.params = { id: "507f191e810c19729de860ea" };
+      const error = new Error("Deletion failed");
+      (Product.findByIdAndDelete as jest.Mock).mockRejectedValue(error);
 
-      const response = await request(app).delete("/api/products/1");
+      await deleteProduct(req as Request, res as Response);
 
-      checkResponse(response, 500, {
-        message: "Error deleting product", // Este mensaje debe coincidir con el controlador
-        error: "Database error",
+      expect(statusMock).toHaveBeenCalledWith(500);
+      expect(jsonMock).toHaveBeenCalledWith({
+        message: "Error deleting product",
+        error: "Deletion failed",
       });
-    });
-
-    it("should return a 404 error if product not found", async () => {
-      (Product.findByIdAndDelete as jest.Mock).mockResolvedValue(null);
-
-      const response = await request(app).delete("/api/products/1");
-
-      checkResponse(response, 404, { message: "Product not found" }); // Este mensaje debe coincidir con el controlador
     });
   });
 });

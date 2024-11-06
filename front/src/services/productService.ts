@@ -20,7 +20,7 @@ export const updateProduct = async (id: any, productData: any) => {
   return response.data;
 };
 
-export const deleteProduct = async (id: any) => {
+export const deleteProduct = async (id: string) => {
   const response = await api.delete(`/products/${id}`);
   return response.data;
 };

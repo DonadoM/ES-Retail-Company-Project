@@ -62,7 +62,10 @@ describe("Order Controller", () => {
         });
 
       expect(response.status).toBe(201);
-      expect(response.body).toEqual(mockOrderData);
+      expect(response.body).toEqual({
+        message: "Order created successfully",
+        order: mockOrderData,
+      });
     });
 
     it("should return a 400 error if order creation fails", async () => {
@@ -78,7 +81,10 @@ describe("Order Controller", () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body).toEqual({ error: "Failed to create order" });
+      expect(response.body).toEqual({
+        error: "Error al crear la orden",
+        details: {},
+      });
     });
   });
 

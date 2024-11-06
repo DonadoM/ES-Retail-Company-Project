@@ -1,20 +1,45 @@
 import { Request, Response } from "express";
 import { Order } from "../models/orderModel";
 
-// Create a new Order
-export const createOrder = async (req: Request, res: Response) => {
+// Crear una nueva orden
+export const createOrder = async (req: Request, res: Response): Promise<void> => {
   try {
-    const order = new Order(req.body);
+    const { customerName, items, totalPrice, status } = req.body;
 
+    // Validación de campos requeridos
+    if (!customerName || !Array.isArray(items) || items.length === 0 || !totalPrice) {
+      res.status(400).json({ error: "Campos requeridos faltantes o inválidos" });
+    }
+
+    // Validar cada ítem en `items`
+    for (const item of items) {
+      if (!item.productId || item.quantity <= 0) {
+         res.status(500).json({ error: "Datos de items inválidos" });
+      }
+    }
+
+    // Crear una nueva orden
+    const order = new Order({
+      customerName,
+      items,
+      totalPrice,
+      status: status || "pending", // default to "pending" if status is not provided
+    });
+
+    // Guardar la orden en la base de datos
     const savedOrder = await order.save();
+     res.status(201).json({ message: "Order created successfully", order: savedOrder });
 
-    res.status(201).send(savedOrder);
   } catch (error) {
-    res.status(400).send({ error: "Failed to create order" });
+     res.status(400).json({ error: "Error al crear la orden", details: error });
   }
 };
-// Get all Orders
 
+
+ 
+
+    //
+// Obtener todas las órdenes
 export const getOrders = async (req: Request, res: Response): Promise<void> => {
   try {
     const orders = await Order.find();
@@ -24,19 +49,13 @@ export const getOrders = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// Get Order by ID
-
-export const getOrderById = async (
-  req: Request,
-
-  res: Response
-): Promise<void> => {
+// Obtener una orden por ID
+export const getOrderById = async (req: Request, res: Response): Promise<void> => {
   try {
     const order = await Order.findById(req.params.id);
 
     if (!order) {
       res.status(404).send({ error: "Order not found" });
-
       return;
     }
 
@@ -46,37 +65,31 @@ export const getOrderById = async (
   }
 };
 
-// Update an Order by ID
-export const updateOrder = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+// Actualizar una orden por ID
+export const updateOrder = async (req: Request, res: Response): Promise<void> => {
   try {
     const order = await Order.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
     if (!order) {
-      res.status(404).json({ error: "Order not found" }); // If no order, send 404 (Not Found)
+      res.status(404).json({ error: "Order not found" });
       return;
     }
-    res.status(200).json(order); // Send response with status 200 (OK)
+    res.status(200).json(order);
   } catch (error) {
     res.status(400).json({ error: "Failed to update order" });
   }
 };
 
-// Delete an Order by ID
-export const deleteOrder = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+// Eliminar una orden por ID
+export const deleteOrder = async (req: Request, res: Response): Promise<void> => {
   try {
     const order = await Order.findByIdAndDelete(req.params.id);
     if (!order) {
-      res.status(404).json({ error: "Order not found" }); // If no order, send 404 (Not Found)
+      res.status(404).json({ error: "Order not found" });
       return;
     }
-    res.status(200).json({ message: "Order deleted successfully" }); // Send response with status 200 (OK)
+    res.status(200).json({ message: "Order deleted successfully" });
   } catch (error) {
     res.status(400).json({ error: "Failed to delete order" });
   }

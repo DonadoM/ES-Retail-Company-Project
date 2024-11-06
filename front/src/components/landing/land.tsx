@@ -10,7 +10,6 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import Image from "next/image";
-// Removed duplicate import
 
 const colors = {
   background: "#31363F",
@@ -187,7 +186,7 @@ const FeatureCard: React.FC<{ feature: Feature; index: number }> = ({
   );
 };
 
-export default function AboutUs() {
+export default function Landing() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,

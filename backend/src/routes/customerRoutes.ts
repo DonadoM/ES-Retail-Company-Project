@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createCustomer,
+  deleteCustomer,
   getCustomers,
 } from "../controllers/customerController";
 
@@ -11,5 +12,11 @@ router.get("/", getCustomers);
 
 // Ruta para crear un nuevo cliente
 router.post("/", createCustomer);
+
+router.put("/:id", (req, res) => {
+  res.send("Update customer");
+});
+
+router.delete("/:id", deleteCustomer);
 
 export default router;

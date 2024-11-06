@@ -24,7 +24,7 @@ export const updateOrder = async (id: any, orderData: any) => {
   return response.data;
 };
 
-export const deleteOrder = async (id: any) => {
+export const deleteOrder = async (id: string) => {
   const response = await api.delete(`/orders/${id}`);
   return response.data;
 };

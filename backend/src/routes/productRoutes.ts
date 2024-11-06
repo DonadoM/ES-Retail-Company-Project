@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createProduct,
+  deleteProduct,
   getProducts,
   updateProduct,
 } from "../controllers/productController";
@@ -18,8 +19,8 @@ router.put("/:id", updateProduct);
 
 // Ruta para eliminar un producto por su ID
 
-router.delete("/:id", (req, res) => {
-  res.send("Delete product");
-});
+router.delete("/:id", deleteProduct);
+
+
 
 export default router;

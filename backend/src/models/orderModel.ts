@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-
+import { v4 as uuidv4 } from "uuid";
 export interface IOrder extends Document {
   orderId: string;
   customerName: string;
@@ -10,7 +10,7 @@ export interface IOrder extends Document {
 }
 
 const orderSchema: Schema = new Schema({
-  orderId: { type: String, required: true, unique: true },
+  orderId: { type: String, unique: true },
   customerName: { type: String, required: true },
   items: [
     {
@@ -27,4 +27,10 @@ const orderSchema: Schema = new Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+orderSchema.pre<IOrder>("save", function (next) {
+  if (!this.orderId) {
+    this.orderId = uuidv4(); // Genera un UUID si `orderId` no se proporciona
+  }
+  next();
+});
 export const Order = mongoose.model<IOrder>("Order", orderSchema);

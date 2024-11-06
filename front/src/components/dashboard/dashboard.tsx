@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronRight } from "lucide-react";
+import { Menu, X, ChevronRight, Search } from "lucide-react";
 import {
   ProductForm,
   CustomerForm,
@@ -41,24 +41,13 @@ import {
   updatePromotion,
   deletePromotion,
 } from "../../services/promotionService";
-import {
-  getInventory,
-  updateInventoryItem,
-} from "../../services/inventoryService";
-import {
-  getUsers,
-  createUser,
-  updateUser,
-  deleteUser,
-} from "../../services/userService";
 
 type TabType =
   | "Products"
   | "Customers"
   | "Orders"
   | "Supply Chain"
-  | "Promotions"
-  | "Users";
+  | "Promotions";
 
 interface ServiceMapType {
   [key: string]: {
@@ -112,6 +101,8 @@ export default function Dashboard() {
   const [formErrors, setFormErrors] = useState<any>({});
   const [isEditing, setIsEditing] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const router = useRouter();
@@ -185,12 +176,6 @@ export default function Dashboard() {
         if (!formData.endDate)
           errors.endDate = "La fecha de finalización es requerida";
         break;
-      case "Users":
-        if (!formData.username)
-          errors.username = "El nombre de usuario es requerido";
-        if (!formData.password) errors.password = "La contraseña es requerida";
-        if (!formData.role) errors.role = "El rol es requerido";
-        break;
       default:
         break;
     }
@@ -226,41 +211,50 @@ export default function Dashboard() {
             throw new Error(`Método update no soportado para ${activeTab}`);
           }
           break;
-        case "delete":
-          if (service.delete && typeof service.delete === "function") {
-            await service.delete(item.id);
-            setData(data.filter((d) => d.id !== item.id));
-          } else {
-            throw new Error(`Método delete no soportado para ${activeTab}`);
-          }
-          break;
-        default:
-          break;
+          case "delete":
+            if (service.delete && typeof service.delete === "function") {
+              if (!deleteId) {
+                throw new Error("ID de eliminación no proporcionado");
+              }
+              await service.delete(deleteId); // Llama al servicio de eliminación con deleteId
+              setData(data.filter((d) => d.id !== deleteId)); // Actualiza el estado de data
+              setDeleteId(""); // Limpia deleteId después de una eliminación exitosa
+            } else {
+              throw new Error(`Método delete no soportado para ${activeTab}`);
+            }
+            break;
+          default:
+            break;
+        }
+        setFormData({});
+        setFormErrors({});
+        setIsEditing(false);
+        setShowModal(false);
+        setShowDeleteModal(false);
+        fetchData(); // Refresca los datos después de la acción
+      } catch (error) {
+        console.log(error);
+        console.error(
+          `Error ${
+            action === "add"
+              ? "agregando"
+              : action === "update"
+              ? "actualizando"
+              : "eliminando"
+          } ${activeTab}:`,
+          error
+        );
+        setError(
+          `Error ${
+            action === "add"
+              ? "agregando"
+              : action === "update"
+              ? "actualizando"
+              : "eliminando"
+          } ${activeTab}: ${(error as Error).message}`
+        );
       }
-      setFormData({});
-      setFormErrors({});
-      setIsEditing(false);
-      setShowModal(false);
-      fetchData();
-    } catch (error) {
-      setError(
-        `Error ${
-          action === "add"
-            ? "agregando"
-            : action === "update"
-            ? "actualizando"
-            : "eliminando"
-        } ${activeTab}: ${(error as Error).message}`
-      );
-    }
-  };
-
-  const filteredData = data.filter((item) =>
-    Object.values(item).some((value) =>
-      String(value).toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
-
+    };
   const renderForm = (): React.ReactNode => {
     switch (activeTab) {
       case "Products":
@@ -307,6 +301,12 @@ export default function Dashboard() {
         return null;
     }
   };
+
+  const filteredData = data.filter((item) =>
+    Object.values(item).some((value) =>
+      String(value).toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
 
   return (
     <div className="flex h-screen bg-[#222831] text-[#EEEEEE] overflow-hidden">
@@ -378,13 +378,19 @@ export default function Dashboard() {
           </motion.button>
           <h2 className="text-xl font-semibold">{activeTab}</h2>
           <div className="flex items-center space-x-2">
-            <input
-              type="text"
-              placeholder={`Buscar en ${activeTab.toLowerCase()}`}
-              className="px-3 py-2 rounded-lg bg-[#222831] border border-[#76ABAE]/30 text-[#EEEEEE] placeholder-[#EEEEEE]/50 focus:outline-none focus:border-[#76ABAE]"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+            <div className="relative">
+              <input
+                type="text"
+                placeholder={`Buscar en ${activeTab.toLowerCase()}`}
+                className="pl-10 pr-3 py-2 rounded-lg bg-[#222831] border border-[#76ABAE]/30 text-[#EEEEEE] placeholder-[#EEEEEE]/50 focus:outline-none focus:border-[#76ABAE]"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <Search
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#EEEEEE]/50"
+                size={18}
+              />
+            </div>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -396,7 +402,15 @@ export default function Dashboard() {
               }}
               className="px-4 py-2 bg-[#76ABAE] text-[#222831] rounded-lg hover:bg-[#76ABAE]/80"
             >
-              Agregar {activeTab}
+              Add {activeTab}
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowDeleteModal(true)}
+              className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+            >
+              Delete {activeTab}
             </motion.button>
           </div>
         </header>
@@ -475,15 +489,7 @@ export default function Dashboard() {
                           }}
                           className="text-[#76ABAE] hover:text-[#76ABAE]/80 mr-2"
                         >
-                          Editar
-                        </motion.button>
-                        <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => handleAction("delete", item)}
-                          className="text-red-400 hover:text-red-500"
-                        >
-                          Eliminar
+                          Update
                         </motion.button>
                       </td>
                     </motion.tr>
@@ -510,7 +516,7 @@ export default function Dashboard() {
               className="bg-[#31363F] p-6 rounded-xl w-full max-w-md"
             >
               <h3 className="text-xl font-bold mb-4">
-                {isEditing ? `Editar ${activeTab}` : `Agregar ${activeTab}`}
+                {isEditing ? `Update ${activeTab}` : `Add ${activeTab}`}
               </h3>
               <form
                 onSubmit={(e) => {
@@ -535,7 +541,69 @@ export default function Dashboard() {
                     type="submit"
                     className="px-4 py-2 bg-[#76ABAE] text-[#222831] rounded-lg hover:bg-[#76ABAE]/80"
                   >
-                    {isEditing ? "Actualizar" : "Agregar"}
+                    {isEditing ? "Update" : "Add"}
+                  </motion.button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showDeleteModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-[#31363F] p-6 rounded-xl w-full max-w-md"
+            >
+              <h3 className="text-xl font-bold mb-4">Delete {activeTab}</h3>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleAction("delete");
+                }}
+              >
+                <div className="mb-4">
+                  <label
+                    htmlFor="deleteId"
+                    className="block text-sm font-medium text-[#EEEEEE] mb-1"
+                  >
+                    ID to Delete
+                  </label>
+                  <input
+                    type="text"
+                    id="deleteId"
+                    value={deleteId}
+                    onChange={(e) => setDeleteId(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg bg-[#222831] border border-[#76ABAE]/30 text-[#EEEEEE] focus:outline-none focus:border-[#76ABAE]"
+                    required
+                  />
+                </div>
+                <div className="flex justify-end space-x-2 mt-6">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    type="button"
+                    onClick={() => setShowDeleteModal(false)}
+                    className="px-4 py-2 border border-[#76ABAE]/30 rounded-lg hover:bg-[#222831]"
+                  >
+                    Cancel
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    type="submit"
+                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                  >
+                    Delete
                   </motion.button>
                 </div>
               </form>

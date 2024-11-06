@@ -5,22 +5,37 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  Home,
+  ShoppingBag,
+  Grid,
+  Info,
+  Mail,
+  User,
+  ShoppingCart,
+  ChevronDown,
+  Menu,
+  X,
+} from "lucide-react";
 
 const NavLink = ({
   href,
   children,
+  icon: Icon,
   onClick,
 }: {
   href: string;
   children: React.ReactNode;
+  icon: React.ElementType;
   onClick?: () => void;
 }) => (
   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
     <Link
       href={href}
-      className="text-[#EEEEEE] hover:text-[#76ABAE] transition-colors text-lg font-medium block py-2"
+      className="text-gray-300 hover:text-white transition-colors text-lg font-medium flex items-center gap-2 py-2 px-4 rounded-md hover:bg-gray-700"
       onClick={onClick}
     >
+      <Icon size={20} />
       {children}
     </Link>
   </motion.div>
@@ -28,16 +43,37 @@ const NavLink = ({
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isCascadeMenuOpen, setIsCascadeMenuOpen] = useState(false);
   const router = useRouter();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const toggleCascadeMenu = () => setIsCascadeMenuOpen(!isCascadeMenuOpen);
 
   const menuVariants = {
     closed: {
       opacity: 0,
-      y: "-100%",
+      height: 0,
       transition: {
-        duration: 0.5,
+        duration: 0.3,
+        ease: "easeInOut",
+      },
+    },
+    open: {
+      opacity: 1,
+      height: "auto",
+      transition: {
+        duration: 0.3,
+        ease: "easeInOut",
+      },
+    },
+  };
+
+  const cascadeMenuVariants = {
+    closed: {
+      opacity: 0,
+      y: -10,
+      transition: {
+        duration: 0.2,
         ease: "easeInOut",
       },
     },
@@ -45,15 +81,15 @@ export default function Navbar() {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.5,
+        duration: 0.2,
         ease: "easeInOut",
       },
     },
   };
 
   return (
-    <nav className="bg-[#222831] shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-8">
+    <nav className="bg-gray-900 shadow-lg">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/dashboard/store" className="flex-shrink-0">
@@ -64,46 +100,90 @@ export default function Navbar() {
                 height={45}
               />
             </Link>
-          </div>
-          <div className="hidden md:flex items-center justify-center flex-1">
-            <div className="ml-10 flex items-center space-x-8">
-              <NavLink href="/pages/store/">Home</NavLink>
-              <NavLink href="/shop">Shop</NavLink>
-              <NavLink href="/categories">Categories</NavLink>
-              <NavLink href="/pages/about">About</NavLink>
-              <NavLink href="/contact">Contact</NavLink>
-              <NavLink href="/pages/profile">Profile</NavLink>
+            <div className="hidden md:block ml-10">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={toggleCascadeMenu}
+                className="text-gray-300 hover:text-white transition-colors text-lg font-medium flex items-center gap-2"
+              >
+                Menu{" "}
+                <ChevronDown
+                  size={20}
+                  className={`transform transition-transform ${
+                    isCascadeMenuOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </motion.button>
+              <AnimatePresence>
+                {isCascadeMenuOpen && (
+                  <motion.div
+                    initial="closed"
+                    animate="open"
+                    exit="closed"
+                    variants={cascadeMenuVariants}
+                    className="absolute mt-2 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 z-10"
+                  >
+                    <div className="py-1">
+                      <NavLink href="/" icon={Home} onClick={toggleCascadeMenu}>
+                        Inicio
+                      </NavLink>
+                      <NavLink
+                        href="/pages/store"
+                        icon={ShoppingBag}
+                        onClick={toggleCascadeMenu}
+                      >
+                        Tienda
+                      </NavLink>
+                      <NavLink
+                        href="/categories"
+                        icon={Grid}
+                        onClick={toggleCascadeMenu}
+                      >
+                        Categorías
+                      </NavLink>
+                      <NavLink
+                        href="/about"
+                        icon={Info}
+                        onClick={toggleCascadeMenu}
+                      >
+                        Acerca de
+                      </NavLink>
+                      <NavLink
+                        href="/contact"
+                        icon={Mail}
+                        onClick={toggleCascadeMenu}
+                      >
+                        Contacto
+                      </NavLink>
+                      <NavLink
+                        href="/pages/profile"
+                        icon={User}
+                        onClick={toggleCascadeMenu}
+                      >
+                        Perfil
+                      </NavLink>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
-          <div className="hidden md:flex items-center">
+          <div className="hidden md:flex items-center space-x-4">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => router.push("/login")}
-              className="px-4 py-2 rounded-md text-[#222831] bg-[#76ABAE] hover:bg-[#76ABAE]/80 transition-colors text-lg font-medium"
+              className="px-4 py-2 rounded-md text-gray-900 bg-blue-400 hover:bg-blue-500 transition-colors text-lg font-medium"
             >
-              Login
+              Iniciar sesión
             </motion.button>
-
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link
                 href="/cart"
-                className="ml-4 text-[#EEEEEE] hover:text-[#76ABAE] transition-colors text-lg font-medium"
+                className="text-gray-300 hover:text-white transition-colors"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
+                <ShoppingCart size={24} />
               </Link>
             </motion.div>
           </div>
@@ -112,42 +192,10 @@ export default function Navbar() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-[#EEEEEE] hover:text-[#76ABAE] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#76ABAE]"
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
             >
-              <span className="sr-only">Open main menu</span>
-              {isMenuOpen ? (
-                <svg
-                  className="block h-6 w-6"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              ) : (
-                <svg
-                  className="block h-6 w-6"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              )}
+              <span className="sr-only">Abrir menú principal</span>
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </motion.button>
           </div>
         </div>
@@ -155,83 +203,38 @@ export default function Navbar() {
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
-            className="md:hidden absolute w-full bg-[#31363F] shadow-lg z-10"
+            className="md:hidden"
             initial="closed"
             animate="open"
             exit="closed"
             variants={menuVariants}
           >
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <NavLink href="/" onClick={toggleMenu}>
-                Home
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-800">
+              <NavLink href="/" icon={Home} onClick={toggleMenu}>
+                Inicio
               </NavLink>
-              <NavLink href="/shop" onClick={toggleMenu}>
-                Shop
+              <NavLink
+                href="/pages/store"
+                icon={ShoppingBag}
+                onClick={toggleMenu}
+              >
+                Tienda
               </NavLink>
-              <NavLink href="/categories" onClick={toggleMenu}>
-                Categories
+              <NavLink href="/categories" icon={Grid} onClick={toggleMenu}>
+                Categorías
               </NavLink>
-              <NavLink href="/about" onClick={toggleMenu}>
-                About
+              <NavLink href="/about" icon={Info} onClick={toggleMenu}>
+                Acerca de
               </NavLink>
-              <NavLink href="/contact" onClick={toggleMenu}>
-                Contact
+              <NavLink href="/contact" icon={Mail} onClick={toggleMenu}>
+                Contacto
+              </NavLink>
+              <NavLink href="/pages/profile" icon={User} onClick={toggleMenu}>
+                Perfil
               </NavLink>
             </div>
-            <div className="pt-4 pb-3 border-t border-[#76ABAE]/20">
+            <div className="pt-4 pb-3 border-t border-gray-700 bg-gray-800">
               <div className="flex items-center px-5">
-                <div className="flex-shrink-0">
-                  <svg
-                    className="h-10 w-10 rounded-full text-[#EEEEEE]"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    ></path>
-                  </svg>
-                </div>
-                <div className="ml-3">
-                  <div className="text-base font-medium text-[#EEEEEE]">
-                    Guest
-                  </div>
-                  <div className="text-sm font-medium text-[#76ABAE]">
-                    Not logged in
-                  </div>
-                </div>
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="ml-auto"
-                >
-                  <Link
-                    href="/cart"
-                    className="text-[#EEEEEE] hover:text-[#76ABAE] transition-colors text-lg font-medium pd-0"
-                    onClick={toggleMenu}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                      />
-                    </svg>
-                  </Link>
-                </motion.div>
-              </div>
-              <div className="mt-3 px-2 space-y-1">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -239,10 +242,15 @@ export default function Navbar() {
                     router.push("/login");
                     toggleMenu();
                   }}
-                  className="block w-full px-3 py-2 rounded-md text-base font-medium text-[#222831] bg-[#76ABAE] hover:bg-[#76ABAE]/80 transition-colors"
+                  className="w-full px-4 py-2 rounded-md text-gray-900 bg-blue-400 hover:bg-blue-500 transition-colors text-lg font-medium"
                 >
-                  Login
+                  Iniciar sesión
                 </motion.button>
+              </div>
+              <div className="mt-3 px-2 space-y-1">
+                <NavLink href="/cart" icon={ShoppingCart} onClick={toggleMenu}>
+                  Carrito
+                </NavLink>
               </div>
             </div>
           </motion.div>

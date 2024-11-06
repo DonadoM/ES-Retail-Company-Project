@@ -20,7 +20,7 @@ export const updateCustomer = async (id: any, customerData: any) => {
   return response.data;
 };
 
-export const deleteCustomer = async (id: any) => {
-  const response = await api.delete("/customers/${id}");
+export const deleteCustomer = async (id: string) => {
+  const response = await api.delete(`/customers/${id}`);
   return response.data;
 };
