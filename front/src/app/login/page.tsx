@@ -35,7 +35,7 @@ export default function LoginComponent() {
       });
 
       if (res?.error) setError(res.error);
-      if (res?.ok) router.push("/dashboard/store");
+      if (res?.ok) router.push("/pages/store");
     } catch {
       setError("Ocurrió un error al iniciar sesión.");
     }

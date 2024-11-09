@@ -226,7 +226,7 @@ export default function RegisterComponent() {
           <p className="text-center text-sm text-[#03346E]">
             ¿Ya tienes una cuenta?{" "}
             <a
-              href="#"
+              href="/login"
               className="font-medium text-[#03346E] hover:text-[#6EACDA]"
             >
               Inicia sesión aquí

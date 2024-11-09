@@ -183,7 +183,7 @@ export default function ProfilePageComponent() {
             >
               <Button
                 className="w-full bg-[#114B5F] text-white hover:bg-[#114B5F]/90"
-                onClick={() => router.push("/dashboard/store")}
+                onClick={() => router.push("/pages/store")}
               >
                 <ShoppingBag className="mr-2 h-5 w-5" />
                 Go to Store

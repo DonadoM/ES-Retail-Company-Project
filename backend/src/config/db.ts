@@ -1,18 +1,8 @@
-// src/config/db.ts
-
 import mongoose from "mongoose";
 
-/**
- * Conectar a la base de datos MongoDB.
- * @returns {Promise<void>} Promesa que se resuelve al establecer la conexión.
- */
-const connectDB = async (): Promise<void> => {
+const connectDB = async () => {
   try {
-    // Intentar conectarse a MongoDB
-    const conn = await mongoose.connect(process.env.MONGO_URI!, {
-      useUnifiedTopology: true, // Usar el nuevo motor de descubrimiento y monitoreo
-      useNewUrlParser: true, // Para analizar correctamente la URL de conexión
-    } as mongoose.ConnectOptions);
+    const conn = await mongoose.connect(process.env.MONGO_URI!);
 
     console.log(`MongoDB conectado: ${conn.connection.host}`); // Mostrar host de conexión
   } catch (error) {

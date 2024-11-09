@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Cart from "@/components/carrito/carrito";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Home,
@@ -92,7 +93,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link href="/dashboard/store" className="flex-shrink-0">
+            <Link href="/pages/store" className="flex-shrink-0">
               <Image
                 src="/logo.png"
                 alt="RetailCompany Logo"
@@ -163,6 +164,14 @@ export default function Navbar() {
                       >
                         Perfil
                       </NavLink>
+
+                      <NavLink
+                        href="/pages/carrito"
+                        icon={Cart}
+                        onClick={toggleCascadeMenu}
+                      >
+                        Carrito{" "}
+                      </NavLink>
                     </div>
                   </motion.div>
                 )}
@@ -178,14 +187,7 @@ export default function Navbar() {
             >
               Iniciar sesión
             </motion.button>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link
-                href="/cart"
-                className="text-gray-300 hover:text-white transition-colors"
-              >
-                <ShoppingCart size={24} />
-              </Link>
-            </motion.div>
+            <Cart />
           </div>
           <div className="md:hidden flex items-center">
             <motion.button
