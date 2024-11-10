@@ -1,7 +1,7 @@
 # **Retail Management System** 📦
 
 **Descripción**  
-Este proyecto es una aplicación full-stack para la gestión de una gran compañía de retail. Proporciona funcionalidades para manejar productos, clientes, pedidos, promociones, inventario, cadena de suministro, y usuarios. Está construido utilizando **Next.js** en el frontend, **Express** en el backend, y **MongoDB** como base de datos, con una arquitectura basada en microservicios.
+Este proyecto es una aplicación full-stack para la gestión de una gran compañía de retail. Proporciona funcionalidades para manejar productos, clientes, pedidos, promociones, cadena de suministro. Está construido utilizando **Next.js** en el frontend, **Express** en el backend, y **MongoDB** como base de datos, con una arquitectura basada en microservicios.
 
 ## **Tabla de Contenidos**
 
@@ -96,18 +96,6 @@ Estructura del Proyecto 📂
 bash
 Copiar código
 
-API Endpoints 📡
-Productos
--GET /api/products - Obtener todos los productos
--POST /api/products - Crear un nuevo producto
--PUT /api/products/:id - Actualizar un producto
--DELETE /api/products/:id - Eliminar un producto
-Clientes
--GET /api/customers - Obtener todos los clientes
--POST /api/customers - Crear un nuevo cliente
--PUT /api/customers/:id - Actualizar un cliente
--DELETE /api/customers/:id - Eliminar un cliente
-(Para más detalles, consulta la documentación de la API)
 
 ## Contribuciones 🛠️
 Las contribuciones son bienvenidas. Si deseas contribuir al proyecto, sigue estos pasos:
