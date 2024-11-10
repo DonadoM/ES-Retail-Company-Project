@@ -13,7 +13,8 @@ const Table = React.forwardRef<
       {...props}
     />
   </div>
-))
+));
+
 Table.displayName = "Table"
 
 const TableHeader = React.forwardRef<

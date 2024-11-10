@@ -1,5 +1,5 @@
 // jest.config.js
-module.exports = {
+export default {
   testEnvironment: "node",
   transform: {
     "^.+\\.tsx?$": "ts-jest",
@@ -8,4 +8,7 @@ module.exports = {
     "^@models/(.*)$": "<rootDir>/src/models/$1",
   },
   testPathIgnorePatterns: ["/node_modules/", "/dist/"],
+  collectCoverage: true,
+  coverageDirectory: "coverage",
+  coverageReporters: ["json", "lcov", "text", "clover"],
 };

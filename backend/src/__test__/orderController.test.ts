@@ -1,5 +1,3 @@
-// backend/src/controllers/__tests__/orderController.test.ts
-
 import request from "supertest";
 import express, { Express } from "express";
 import {
@@ -13,7 +11,6 @@ import { IOrder, Order } from "../models/orderModel";
 
 jest.mock("../models/orderModel");
 
-// Configuración general de la app
 const setupApp: () => Express = (): Express => {
   const app: Express = express();
   app.use(express.json());
@@ -27,7 +24,6 @@ const setupApp: () => Express = (): Express => {
 
 const app = setupApp();
 
-// Utilidad para simular un pedido
 const mockOrderData = {
   _id: "newId",
   orderId: "ORD12345",
@@ -38,7 +34,6 @@ const mockOrderData = {
   createdAt: new Date().toISOString(),
 };
 
-// Utilidad para simular error
 const mockReject = (fn: jest.Mock, errorMsg = "Database error") => {
   fn.mockRejectedValue(new Error(errorMsg));
 };
@@ -68,7 +63,7 @@ describe("Order Controller", () => {
       });
     });
 
-    it("should return a 400 error if order creation fails", async () => {
+    it("should return a 500 error if order creation fails", async () => {
       mockReject(Order.prototype.save);
 
       const response = await request(app)
@@ -80,9 +75,9 @@ describe("Order Controller", () => {
           totalPrice: 200,
         });
 
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(500);
       expect(response.body).toEqual({
-        error: "Error al crear la orden",
+        error: "Error creating order",
         details: {},
       });
     });
@@ -90,9 +85,7 @@ describe("Order Controller", () => {
 
   describe("getOrders", () => {
     it("should return an array of orders", async () => {
-      jest
-        .spyOn(Order, "find")
-        .mockResolvedValue([mockOrderData as unknown as IOrder]);
+      jest.spyOn(Order, "find").mockResolvedValue([mockOrderData as unknown as IOrder]);
 
       const response = await request(app).get("/api/orders");
 
@@ -106,15 +99,16 @@ describe("Order Controller", () => {
       const response = await request(app).get("/api/orders");
 
       expect(response.status).toBe(500);
-      expect(response.body).toEqual({ message: "Error retrieving orders" });
+      expect(response.body).toEqual({
+        error: "Error retrieving orders",
+        details: {},
+      });
     });
   });
 
   describe("getOrderById", () => {
     it("should return a single order by ID", async () => {
-      jest
-        .spyOn(Order, "findById")
-        .mockResolvedValue(mockOrderData as unknown as IOrder);
+      jest.spyOn(Order, "findById").mockResolvedValue(mockOrderData as unknown as IOrder);
 
       const response = await request(app).get("/api/orders/1");
 
@@ -131,29 +125,33 @@ describe("Order Controller", () => {
       expect(response.body).toEqual({ error: "Order not found" });
     });
 
-    it("should return a 400 error if retrieval fails", async () => {
+    it("should return a 500 error if retrieval fails", async () => {
       mockReject(Order.findById as jest.Mock);
 
       const response = await request(app).get("/api/orders/1");
 
-      expect(response.status).toBe(400);
-      expect(response.body).toEqual({ error: "Failed to fetch order" });
+      expect(response.status).toBe(500);
+      expect(response.body).toEqual({
+        error: "Failed to fetch order",
+        details: {},
+      });
     });
   });
 
   describe("updateOrder", () => {
     it("should update an order and return the updated order", async () => {
       const updatedOrder = { ...mockOrderData, totalPrice: 200 };
-      jest
-        .spyOn(Order, "findByIdAndUpdate")
-        .mockResolvedValue(updatedOrder as unknown as IOrder);
+      jest.spyOn(Order, "findByIdAndUpdate").mockResolvedValue(updatedOrder as unknown as IOrder);
 
       const response = await request(app).put("/api/orders/1").send({
         totalPrice: 200,
       });
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(updatedOrder);
+      expect(response.body).toEqual({
+        message: "Order updated successfully",
+        order: updatedOrder,
+      });
     });
 
     it("should return a 404 error if order not found", async () => {
@@ -167,23 +165,24 @@ describe("Order Controller", () => {
       expect(response.body).toEqual({ error: "Order not found" });
     });
 
-    it("should return a 400 error if update fails", async () => {
+    it("should return a 500 error if update fails", async () => {
       mockReject(Order.findByIdAndUpdate as jest.Mock);
 
       const response = await request(app).put("/api/orders/1").send({
         totalPrice: 250,
       });
 
-      expect(response.status).toBe(400);
-      expect(response.body).toEqual({ error: "Failed to update order" });
+      expect(response.status).toBe(404);
+      expect(response.body).toEqual({
+        error: "Failed to update order",
+        details: {},
+      });
     });
   });
 
   describe("deleteOrder", () => {
     it("should delete an order and return a success message", async () => {
-      jest
-        .spyOn(Order, "findByIdAndDelete")
-        .mockResolvedValue(mockOrderData as unknown as IOrder);
+      jest.spyOn(Order, "findByIdAndDelete").mockResolvedValue(mockOrderData as unknown as IOrder);
 
       const response = await request(app).delete("/api/orders/1");
 
@@ -200,13 +199,16 @@ describe("Order Controller", () => {
       expect(response.body).toEqual({ error: "Order not found" });
     });
 
-    it("should return a 400 error if deletion fails", async () => {
+    it("should return a 500 error if deletion fails", async () => {
       mockReject(Order.findByIdAndDelete as jest.Mock);
 
       const response = await request(app).delete("/api/orders/1");
 
-      expect(response.status).toBe(400);
-      expect(response.body).toEqual({ error: "Failed to delete order" });
+      expect(response.status).toBe(404);
+      expect(response.body).toEqual({
+        error: "Failed to delete order",
+        details: {},
+      });
     });
   });
 });

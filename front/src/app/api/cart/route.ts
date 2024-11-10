@@ -1,6 +1,6 @@
-import { NextResponse, NextRequest } from 'next/server';
-import { connectDB } from '@/lib/mongodb'; 
-import CartItem from '@/models/cartItem'; 
+import { NextResponse, NextRequest } from "next/server";
+import { connectDB } from "@/lib/mongodb";
+import CartItem from "@/models/cartItem";
 
 // Obtener todos los artículos del carrito
 export async function GET() {
@@ -9,7 +9,10 @@ export async function GET() {
     const items = await CartItem.find();
     return NextResponse.json(items);
   } catch (error) {
-    return NextResponse.error();
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 500 }
+    );
   }
 }
 
@@ -21,22 +24,35 @@ export async function POST(req: Request) {
     await newItem.save();
     return NextResponse.json(newItem, { status: 201 });
   } catch (error) {
-    return NextResponse.error();
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 500 }
+    );
   }
 }
 
 // Actualizar un artículo en el carrito
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     const { id } = params;
     const { quantity } = await req.json();
-    const updatedItem = await CartItem.findByIdAndUpdate(id, { quantity }, { new: true });
+    const updatedItem = await CartItem.findByIdAndUpdate(
+      id,
+      { quantity },
+      { new: true }
+    );
     if (!updatedItem) {
-      return NextResponse.json({ message: 'Item not found' }, { status: 404 });
+      return NextResponse.json({ message: "Item not found" }, { status: 404 });
     }
     return NextResponse.json(updatedItem);
   } catch (error) {
-    return NextResponse.error();
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 500 }
+    );
   }
 }
 
@@ -44,13 +60,16 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 export async function DELETE(req: Request) {
   try {
     const url = new URL(req.url);
-    const id = url.pathname.split('/').pop() || '';
+    const id = url.pathname.split("/").pop() || "";
     const deletedItem = await CartItem.findByIdAndDelete(id);
     if (!deletedItem) {
-      return NextResponse.json({ message: 'Item not found' }, { status: 404 });
+      return NextResponse.json({ message: "Item not found" }, { status: 404 });
     }
-    return NextResponse.json({ message: 'Item deleted successfully' });
+    return NextResponse.json({ message: "Item deleted successfully" });
   } catch (error) {
-    return NextResponse.error();
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 500 }
+    );
   }
 }

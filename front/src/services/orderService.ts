@@ -14,12 +14,12 @@ export const getOrders = async () => {
   }
 };
 
-export const createOrder = async (orderData: any) => {
+export const createOrder = async (orderData: string) => {
   const response = await api.post("/orders", orderData);
   return response.data;
 };
 
-export const updateOrder = async (id: any, orderData: any) => {
+export const updateOrder = async (id: any, orderData: string) => {
   const response = await api.put(`/orders/${id}`, orderData);
   return response.data;
 };

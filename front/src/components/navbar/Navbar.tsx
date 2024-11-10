@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import Cart from "@/components/carrito/carrito";
+// import Cart from "@/components/carrito/carrito";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Home,
@@ -165,13 +165,13 @@ export default function Navbar() {
                         Perfil
                       </NavLink>
 
-                      <NavLink
+                      {/* <NavLink
                         href="/pages/carrito"
                         icon={Cart}
                         onClick={toggleCascadeMenu}
                       >
                         Carrito{" "}
-                      </NavLink>
+                      </NavLink> */}
                     </div>
                   </motion.div>
                 )}
@@ -187,7 +187,7 @@ export default function Navbar() {
             >
               Iniciar sesión
             </motion.button>
-            <Cart />
+            {/* <Cart /> */}
           </div>
           <div className="md:hidden flex items-center">
             <motion.button
