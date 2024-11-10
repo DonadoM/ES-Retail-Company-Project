@@ -1,7 +1,7 @@
 # **Retail Management System** 📦
 
 **Descripción**  
-Este proyecto es una aplicación full-stack para la gestión de una gran compañía de retail. Proporciona funcionalidades para manejar productos, clientes, pedidos, promociones, cadena de suministro. Está construido utilizando **Next.js** en el frontend, **Express** en el backend, y **MongoDB** como base de datos, con una arquitectura basada en microservicios.
+Este proyecto es una aplicación full-stack para la gestión de una gran compañía de retail. Proporciona funcionalidades para manejar productos, clientes, pedidos, promociones, cadena de suministro. Está construido utilizando **Next.js** en el frontend, **Express** en el backend, y **MongoDB** como base de datos, con una arquitectura basada en microservicios
 
 ## **Tabla de Contenidos**
 
