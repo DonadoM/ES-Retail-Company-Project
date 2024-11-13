@@ -10,13 +10,22 @@ export const getCustomers = async () => {
   return response.data;
 };
 
-export const createCustomer = async (customerData: any) => {
+interface CustomerData {
+  name: string;
+  email: string;
+  // Add other customer fields here
+}
+
+export const createCustomer = async (customerData: CustomerData) => {
   const response = await api.post("/customers", customerData);
   return response.data;
 };
 
-export const updateCustomer = async (id: any, customerData: any) => {
-  const response = await api.put("/customers/${id}", customerData);
+export const updateCustomer = async (
+  id: string,
+  customerData: CustomerData
+) => {
+  const response = await api.put(`/customers/${id}`, customerData);
   return response.data;
 };
 

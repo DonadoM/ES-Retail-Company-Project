@@ -10,11 +10,13 @@ export const connectDB = async () => {
   try {
     const { connection } = await mongoose.connect(MONGODB_URI);
     if (connection.readyState === 1) {
-      //console.log("Connected to MongoDB");
+      console.log("Connected to MongoDB");
       return Promise.resolve(true);
     }
-  } catch (error) {
-    //console.log("Error connecting to MongoDB", error);
-    return Promise.reject(false);
+  } catch (error: unknown) {
+    // Type assertion for better error handling
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Error connecting to MongoDB:", errorMessage);
+    return Promise.reject(errorMessage);
   }
 };

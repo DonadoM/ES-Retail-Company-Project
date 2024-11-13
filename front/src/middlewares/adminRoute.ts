@@ -15,8 +15,9 @@ const adminMiddleware = async (
 
     res.status(403).json({ message: "Access denied: Admins only" });
     return false;
-  } catch (error) {
-    res.status(500).json({ message: "Server error during authorization" });
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    res.status(500).json({ message: `Server error during authorization: ${errorMessage}` });
     return false;
   }
 };

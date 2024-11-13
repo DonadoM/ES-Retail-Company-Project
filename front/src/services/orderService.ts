@@ -19,7 +19,7 @@ export const createOrder = async (orderData: string) => {
   return response.data;
 };
 
-export const updateOrder = async (id: any, orderData: string) => {
+export const updateOrder = async (id: string, orderData: string) => {
   const response = await api.put(`/orders/${id}`, orderData);
   return response.data;
 };

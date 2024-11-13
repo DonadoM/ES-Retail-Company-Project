@@ -24,7 +24,7 @@ export default async function handler(
       await connectDB(); // Conecta a la base de datos
       const users = await User.find().select("-password"); // Obtén todos los usuarios sin el campo de contraseña
       return res.status(200).json(users); // Retorna la lista de usuarios
-    } catch (error: any) {
+    } catch (error) {
       return res.status(500).json({ message: (error as Error).message });
     }
   } else {

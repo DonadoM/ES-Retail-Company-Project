@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState, useEffect, useCallback } from "react"
-import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { Sidebar } from "./Sidebar"
 import { Header } from "./Header"
@@ -32,7 +31,6 @@ export default function Dashboard() {
   const [deleteId, setDeleteId] = useState("")
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
 
-  const router = useRouter()
 
   const fetchData = useCallback(async () => {
     setIsLoading(true)
@@ -111,9 +109,7 @@ export default function Dashboard() {
   }
 
   const handleAction = async (
-    action: "add" | "update" | "delete",
-    item?: Item
-  ) => {
+    action: "add" | "update" | "delete"  ) => {
     if (action !== "delete" && !validateForm()) return
 
     const service = serviceMap[activeTab]

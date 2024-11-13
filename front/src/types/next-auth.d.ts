@@ -1,6 +1,6 @@
 // src/types/next-auth.d.ts
 
-import NextAuth, { DefaultSession } from 'next-auth';
+import  { DefaultSession } from 'next-auth';
 
 // Extiende la interfaz Session para incluir la propiedad 'role' en el usuario
 declare module 'next-auth' {

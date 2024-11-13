@@ -105,7 +105,7 @@ export default function RegisterComponent() {
         });
 
         if (res?.ok) {
-          return router.push("/dashboard/profile");
+          return router.push("/pages/profile");
         }
       } catch (error) {
         console.log(error);

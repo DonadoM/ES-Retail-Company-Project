@@ -59,8 +59,7 @@ const MovingBackground = () => {
 };
 
 const ParallaxImage: React.FC<{ src: string; alt: string }> = ({
-  src,
-  alt,
+  
 }) => {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -140,7 +139,6 @@ interface Feature {
 
 const FeatureCard: React.FC<{ feature: Feature; index: number }> = ({
   feature,
-  index,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 

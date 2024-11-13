@@ -10,17 +10,24 @@ export const getSupplyChain = async () => {
   return response.data;
 };
 
-export const createSupplyChainItem = async (supplyChainData: any) => {
+interface SupplyChainData {
+  id: string;
+  name: string;
+  status: string;
+  // Add other properties as needed
+}
+
+export const createSupplyChainItem = async (supplyChainData: SupplyChainData) => {
   const response = await api.post('/supplychain', supplyChainData);
   return response.data;
 };
 
-export const updateSupplyChainItem = async (id: any, supplyChainData: any) => {
+export const updateSupplyChainItem = async (id: string, supplyChainData: SupplyChainData) => {
   const response = await api.put(`/supplychain/${id}`, supplyChainData);
   return response.data;
 };
 
-export const deleteSupplyChainItem = async (id: any) => {
+export const deleteSupplyChainItem = async (id: string) => {
   const response = await api.delete(`/supplychain/${id}`);
   return response.data;
 };
