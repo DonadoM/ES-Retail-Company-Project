@@ -56,7 +56,6 @@ export interface CustomerItem extends BaseItem {
 }
 
 export interface OrderItem extends BaseItem {
-  quantity: number
   customerName: string
   totalPrice: number
   status: "pending" | "completed" | "canceled"
@@ -80,44 +79,42 @@ export interface PromotionItem extends BaseItem {
 
 export type Item = ProductItem | CustomerItem | OrderItem | SupplyChainItem | PromotionItem
 
-export interface ServiceMapType {
-  [key: string]: {
-    get: () => Promise<Item[]>
-    create?: (data: Item) => Promise<Item>
-    update?: (id: string, data: Item) => Promise<Item>
-    delete?: (id: string) => Promise<void>
-  }
+export interface ServiceMapType<T extends Item> {
+  get: () => Promise<T[]>
+  create?: (data: T) => Promise<T>
+  update?: (id: string, data: T) => Promise<T>
+  delete?: (id: string) => Promise<void>
 }
 
-export const serviceMap: ServiceMapType = {
+export const serviceMap: { [key in TabType]: ServiceMapType<any> } = {
   Products: {
-    get: getProducts,
-    create: createProduct,
-    update: updateProduct,
-    delete: deleteProduct,
+    get: () => Promise.resolve(getProducts()),
+    create: (data) => Promise.resolve(createProduct(data)),
+    update: (id, data) => Promise.resolve(updateProduct(id, data)),
+    delete: (id) => Promise.resolve(deleteProduct(id)),
   },
   Customers: {
-    get: getCustomers,
-    create: createCustomer,
-    update: updateCustomer,
-    delete: deleteCustomer,
+    get: () => Promise.resolve(getCustomers()),
+    create: (data) => Promise.resolve(createCustomer(data)),
+    update: (id, data) => Promise.resolve(updateCustomer(id, data)),
+    delete: (id) => Promise.resolve(deleteCustomer(id)),
   },
   Orders: {
-    get: getOrders,
-    create: createOrder,
-    update: updateOrder,
-    delete: deleteOrder,
+    get: () => Promise.resolve(getOrders()),
+    create: (data) => Promise.resolve(createOrder(data)),
+    update: (id, data) => Promise.resolve(updateOrder(id, data)),
+    delete: (id) => Promise.resolve(deleteOrder(id)),
   },
   "Supply Chain": {
-    get: getSupplyChain,
-    create: createSupplyChainItem,
-    update: updateSupplyChainItem,
-    delete: deleteSupplyChainItem,
+    get: () => Promise.resolve(getSupplyChain()),
+    create: (data) => Promise.resolve(createSupplyChainItem(data)),
+    update: (id, data) => Promise.resolve(updateSupplyChainItem(id, data)),
+    delete: (id) => Promise.resolve(deleteSupplyChainItem(id)),
   },
   Promotions: {
-    get: getPromotions,
-    create: createPromotion,
-    update: updatePromotion,
-    delete: deletePromotion,
+    get: () => Promise.resolve(getPromotions()),
+    create: (data) => Promise.resolve(createPromotion(data)),
+    update: (id, data) => Promise.resolve(updatePromotion(id, data)),
+    delete: (id) => Promise.resolve(deletePromotion(id)),
   },
 }

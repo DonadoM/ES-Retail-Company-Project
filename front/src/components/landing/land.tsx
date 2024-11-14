@@ -58,9 +58,7 @@ const MovingBackground = () => {
   );
 };
 
-const ParallaxImage: React.FC<{ src: string; alt: string }> = ({
-  
-}) => {
+const ParallaxImage: React.FC<{ src: string; alt: string }> = ({}) => {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,

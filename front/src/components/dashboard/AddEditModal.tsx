@@ -1,14 +1,14 @@
-import React from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { TabType, Item } from "./types"
+import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { TabType, Item } from "./types";
 
 interface AddEditModalProps {
-  showModal: boolean
-  setShowModal: (show: boolean) => void
-  isEditing: boolean
-  activeTab: TabType
-  renderForm: () => React.ReactNode
-  handleAction: (action: "add" | "update", item?: Item) => Promise<void>
+  showModal: boolean;
+  setShowModal: (show: boolean) => void;
+  isEditing: boolean;
+  activeTab: TabType;
+  renderForm: () => React.ReactNode;
+  handleAction: (action: "add" | "update", item?: Item) => Promise<void>;
 }
 
 export const AddEditModal: React.FC<AddEditModalProps> = React.memo(
@@ -40,8 +40,8 @@ export const AddEditModal: React.FC<AddEditModalProps> = React.memo(
               </h3>
               <form
                 onSubmit={(e) => {
-                  e.preventDefault()
-                  handleAction(isEditing ? "update" : "add")
+                  e.preventDefault();
+                  handleAction(isEditing ? "update" : "add");
                 }}
               >
                 {renderForm()}
@@ -69,8 +69,8 @@ export const AddEditModal: React.FC<AddEditModalProps> = React.memo(
           </motion.div>
         )}
       </AnimatePresence>
-    )
+    );
   }
-)
+);
 
-AddEditModal.displayName = "AddEditModal"
+AddEditModal.displayName = "AddEditModal";

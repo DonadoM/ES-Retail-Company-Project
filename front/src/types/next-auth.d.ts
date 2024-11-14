@@ -1,9 +1,11 @@
 // src/types/next-auth.d.ts
 
-import  { DefaultSession } from 'next-auth';
+import { DefaultSession } from "next-auth";
+
+debug: false;
 
 // Extiende la interfaz Session para incluir la propiedad 'role' en el usuario
-declare module 'next-auth' {
+declare module "next-auth" {
   interface Session {
     user: {
       /** The user's name. */
@@ -14,12 +16,12 @@ declare module 'next-auth' {
       image?: string | null;
       /** Custom role property added to the user. */
       role?: string | null;
-    } & DefaultSession['user'];
+    } & DefaultSession["user"];
   }
 }
 
 // Opcional: Extiende el tipo User en caso de que utilices un adaptador personalizado
-declare module 'next-auth/jwt' {
+declare module "next-auth/jwt" {
   interface JWT {
     /** Custom role property added to the JWT. */
     role?: string | null;

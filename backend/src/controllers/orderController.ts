@@ -3,33 +3,31 @@ import { Order } from "../models/orderModel";
 
 // Helper function to validate items array in the request
 const validateItems = (items: any[]): boolean => {
-  return items.every((item) => item.productId && item.quantity > 0);
+  return (
+    Array.isArray(items) &&
+    items.every(
+      (item) =>
+        item.productId && typeof item.quantity === "number" && item.quantity > 0
+    )
+  );
 };
 
 // Create a new order
+
 export const createOrder = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   const { customerName, items, totalPrice, status } = req.body;
 
-  if (
-    !customerName ||
-    !Array.isArray(items) ||
-    items.length === 0 ||
-    !totalPrice
-  ) {
-    res.status(400).json({ error: "Missing or invalid required fields" });
-  }
-
-  if (!validateItems(items)) {
-    res.status(400).json({ error: "Invalid item data" });
+  if (!customerName || !validateItems(items) || !totalPrice) {
+    res.status(400).json({ error: "Invalid request" });
+    return;
   }
 
   try {
     const order = new Order({
       customerName,
-      items,
       totalPrice,
       status: status || "pending",
     });
@@ -39,7 +37,7 @@ export const createOrder = async (
       .status(201)
       .json({ message: "Order created successfully", order: savedOrder });
   } catch (error) {
-    res.status(500).json({ error: "Error creating order", details: error });
+    res.status(500).json({ error: "Failed to create order", details: error });
   }
 };
 
@@ -56,7 +54,6 @@ export const getOrders = async (
   }
 };
 
-
 // Get an order by ID
 export const getOrderById = async (
   req: Request,
@@ -65,8 +62,8 @@ export const getOrderById = async (
   try {
     const order = await Order.findById(req.params.id);
     if (!order) {
-       res.status(404).json({ error: "Order not found" });
-       return;
+      res.status(404).json({ error: "Order not found" });
+      return;
     }
     res.status(200).json(order);
   } catch (error) {
@@ -102,9 +99,8 @@ export const deleteOrder = async (
   try {
     const order = await Order.findByIdAndDelete(req.params.id);
     if (!order) {
-
-       res.status(404).json({ error: "Order not found" });
-      return; 
+      res.status(404).json({ error: "Order not found" });
+      return;
     }
     res.status(200).json({ message: "Order deleted successfully" });
   } catch (error) {

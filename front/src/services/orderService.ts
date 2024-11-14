@@ -1,9 +1,11 @@
 // services/orderService.ts
 import axios from "axios";
 
+
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000", // Provide a default value
 });
+
 export const getOrders = async () => {
   try {
     const response = await api.get("/orders");
@@ -14,9 +16,17 @@ export const getOrders = async () => {
   }
 };
 
-export const createOrder = async (orderData: string) => {
-  const response = await api.post("/orders", orderData);
-  return response.data;
+export const createOrder = async (orderData: {
+  customerName: string;
+  totalPrice: number;
+  status?: "pending" | "completed" | "canceled";
+}) => {
+  try {
+    const response = await api.post("/orders", orderData);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating Order:", error);
+  }
 };
 
 export const updateOrder = async (id: string, orderData: string) => {

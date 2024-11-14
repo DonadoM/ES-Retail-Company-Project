@@ -204,16 +204,6 @@ export const OrderForm: React.FC<FormProps<OrderItem>> = ({
 }) => (
   <>
     <FormInput
-      id="quantity"
-      label="Cantidad"
-      type="number"
-      value={formData.quantity}
-      onChange={(e) =>
-        setFormData({ ...formData, quantity: parseInt(e.target.value, 10) })
-      }
-      error={formErrors.quantity}
-    />
-    <FormInput
       id="customerName"
       label="Nombre del Cliente"
       type="text"
@@ -250,16 +240,6 @@ export const OrderForm: React.FC<FormProps<OrderItem>> = ({
         { value: "completed", label: "Completado" },
         { value: "canceled", label: "Cancelado" },
       ]}
-    />
-    <FormInput
-      id="createdAt"
-      label="Fecha de Creación"
-      type="date"
-      value={formData.createdAt}
-      onChange={(e) =>
-        setFormData({ ...formData, createdAt: new Date(e.target.value) })
-      }
-      error={formErrors.createdAt}
     />
   </>
 );

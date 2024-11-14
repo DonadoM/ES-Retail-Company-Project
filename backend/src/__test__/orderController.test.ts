@@ -77,7 +77,7 @@ describe("Order Controller", () => {
 
       expect(response.status).toBe(500);
       expect(response.body).toEqual({
-        error: "Error creating order",
+        error: "Failed to create order",
         details: {},
       });
     });
