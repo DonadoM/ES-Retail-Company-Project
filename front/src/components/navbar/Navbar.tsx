@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -16,6 +16,8 @@ import {
   ChevronDown,
   Menu,
   X,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 const NavLink = ({
@@ -44,10 +46,24 @@ const NavLink = ({
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCascadeMenuOpen, setIsCascadeMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const isDark = localStorage.getItem("darkMode") === "true";
+    setIsDarkMode(isDark);
+    document.documentElement.classList.toggle("dark", isDark);
+  }, []);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleCascadeMenu = () => setIsCascadeMenuOpen(!isCascadeMenuOpen);
+
+  const toggleDarkMode = () => {
+    const newDarkMode = !isDarkMode;
+    setIsDarkMode(newDarkMode);
+    localStorage.setItem("darkMode", newDarkMode.toString());
+    document.documentElement.classList.toggle("dark", newDarkMode);
+  };
 
   const menuVariants = {
     closed: {
@@ -88,7 +104,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-gray-900 shadow-lg">
+    <nav className="bg-gray-900 shadow-lg dark:bg-gray-800 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
@@ -136,7 +152,7 @@ export default function Navbar() {
                         Tienda
                       </NavLink>
                       <NavLink
-                        href="/about"
+                        href="/pages/about"
                         icon={Info}
                         onClick={toggleCascadeMenu}
                       >
@@ -159,12 +175,20 @@ export default function Navbar() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={toggleDarkMode}
+              className="p-2 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+              aria-label="Toggle dark mode"
+            >
+              {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => router.push("/login")}
-              className="px-4 py-2 rounded-md text-gray-900 bg-blue-400 hover:bg-blue-500 transition-colors text-lg font-medium"
+              className=" px-4 py-2  rounded-md text-gray-900 bg-blue-400 hover:bg-blue-500 transition-colors text-lg font-medium dark:bg-blue-600 dark:hover:bg-blue-700"
             >
               Iniciar sesión
             </motion.button>
-            {/* <Cart /> */}
           </div>
           <div className="md:hidden flex items-center">
             <motion.button
@@ -172,6 +196,7 @@ export default function Navbar() {
               whileTap={{ scale: 0.95 }}
               onClick={toggleMenu}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              aria-expanded={isMenuOpen}
             >
               <span className="sr-only">Abrir menú principal</span>
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -199,16 +224,15 @@ export default function Navbar() {
               >
                 Tienda
               </NavLink>
-              
-              <NavLink href="/about" icon={Info} onClick={toggleMenu}>
+              <NavLink href="/pages/about" icon={Info} onClick={toggleMenu}>
                 Acerca de
-              </NavLink>    
+              </NavLink>
               <NavLink href="/pages/profile" icon={User} onClick={toggleMenu}>
                 Perfil
               </NavLink>
             </div>
             <div className="pt-4 pb-3 border-t border-gray-700 bg-gray-800">
-              <div className="flex items-center px-5">
+              <div className="flex items-center px-5 space-x-3">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -216,9 +240,26 @@ export default function Navbar() {
                     router.push("/login");
                     toggleMenu();
                   }}
-                  className="w-full px-4 py-2 rounded-md text-gray-900 bg-blue-400 hover:bg-blue-500 transition-colors text-lg font-medium"
+                  className="flex-grow px-4 py-2 rounded-md text-gray-900 bg-blue-400 hover:bg-blue-500 transition-colors text-lg font-medium dark:bg-blue-600 dark:hover:bg-blue-700"
                 >
                   Iniciar sesión
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={toggleDarkMode}
+                  className="p-2 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                  aria-label="Toggle dark mode"
+                >
+                  {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="p-2 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                  aria-label="View shopping cart"
+                >
+                  <ShoppingCart size={24} />
                 </motion.button>
               </div>
             </div>
@@ -228,3 +269,4 @@ export default function Navbar() {
     </nav>
   );
 }
+

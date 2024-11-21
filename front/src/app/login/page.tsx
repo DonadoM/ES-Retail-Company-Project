@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Eye, EyeOff, ShoppingBag } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import {  } from "@/components/navbar/Navbar";
 
 export default function LoginComponent() {
   const [email, setEmail] = useState("");

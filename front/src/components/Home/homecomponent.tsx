@@ -11,53 +11,12 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
-
-const colors = {
-  background: "#31363F",
-  text: "#EEEEEE",
-  accent: "#76ABAE",
-};
-
-const MovingBackground = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent): void => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
-
-  return (
-    <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-      <motion.div
-        className="absolute inset-0 opacity-20"
-        style={{
-          background: `radial-gradient(circle at ${mousePosition.x}px ${mousePosition.y}px, ${colors.accent} 0%, ${colors.background} 50%)`,
-        }}
-        animate={{
-          background: `radial-gradient(circle at ${mousePosition.x}px ${mousePosition.y}px, ${colors.accent} 0%, ${colors.background} 50%)`,
-        }}
-        transition={{ type: "tween", ease: "linear", duration: 0.2 }}
-      />
-      <motion.div
-        className="absolute inset-0 opacity-10"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-        }}
-        animate={{
-          x: [0, 10, 0],
-          y: [0, 15, 0],
-        }}
-        transition={{
-          x: { repeat: Infinity, duration: 20, ease: "linear" },
-          y: { repeat: Infinity, duration: 30, ease: "linear" },
-        }}
-      />
-    </div>
-  );
-};
+import { colors } from "../../lib/colors";
+import { MovingBackground } from "./MovingBackground";
+import { Navigation } from "./Navigation";
+import { MobileMenu } from "./MobileMenu";
+import { DarkModeToggle } from "./DarkModeToggle";
+import { FeatureCard } from "./FeaturedCard";
 
 const AnimatedText: React.FC<{ children: React.ReactNode; delay?: number }> = ({
   children,
@@ -133,55 +92,6 @@ const ParallaxImage: React.FC<{ src: string; alt: string }> = ({
   );
 };
 
-const FeatureCard: React.FC<{
-  title: string;
-  description: string;
-  icon: string;
-}> = ({ title, description, icon }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
-  return (
-    <motion.div
-      className="p-6 rounded-lg overflow-hidden relative"
-      style={{ backgroundColor: `${colors.accent}22` }}
-      whileHover={{ scale: 1.05, backgroundColor: `${colors.accent}33` }}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      transition={{ type: "spring", stiffness: 300 }}
-    >
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-br from-transparent to-black/30"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isHovered ? 1 : 0 }}
-        transition={{ duration: 0.3 }}
-      />
-      <motion.div
-        className="text-4xl mb-4"
-        animate={{ rotateY: isHovered ? 360 : 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        {icon}
-      </motion.div>
-      <motion.h3
-        className="text-xl font-semibold mb-2 relative z-10"
-        style={{ color: colors.accent }}
-        animate={{ y: isHovered ? -5 : 0 }}
-      >
-        {title}
-      </motion.h3>
-      <motion.p
-        style={{ color: colors.text }}
-        className="relative z-10"
-        initial={{ opacity: 0, height: 0 }}
-        animate={{ opacity: isHovered ? 1 : 0, height: isHovered ? "auto" : 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        {description}
-      </motion.p>
-    </motion.div>
-  );
-};
-
 export default function Landing() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
@@ -194,11 +104,9 @@ export default function Landing() {
 
   return (
     <div
-      className="relative min-h-screen overflow-hidden"
+      className="relative min-h-screen overflow-hidden dark:bg-gray-900 dark:text-white"
       style={{ backgroundColor: colors.background, color: colors.text }}
     >
-      <MovingBackground />
-
       <motion.div
         className="fixed top-0 left-0 right-0 h-1 origin-left z-50"
         style={{ scaleX, backgroundColor: colors.accent }}
@@ -219,28 +127,8 @@ export default function Landing() {
               4F WEARS
             </Link>
           </motion.div>
-          <motion.div
-            className="hidden md:flex items-center gap-6"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, staggerChildren: 0.1 }}
-          >
-            {["Home", "Shop", "Product", "Career"].map((item, index) => (
-              <motion.div
-                key={item}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <Link
-                  href="/pages/store"
-                  className="text-sm hover:text-accent transition-colors"
-                >
-                  {item}
-                </Link>
-              </motion.div>
-            ))}
-          </motion.div>
+          <Navigation />
+          <MobileMenu />
         </nav>
       </header>
 
@@ -348,13 +236,15 @@ export default function Landing() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <motion.span
-                className="absolute inset-0 bg-white"
-                initial={{ scale: 0, opacity: 0.3 }}
-                whileHover={{ scale: 1.5, opacity: 0 }}
-                transition={{ duration: 0.4 }}
-              />
-              Shop Now
+              <Link href="/pages/store">
+                <motion.span
+                  className="absolute inset-0 bg-white"
+                  initial={{ scale: 0, opacity: 0.3 }}
+                  whileHover={{ scale: 1.5, opacity: 0 }}
+                  transition={{ duration: 0.4 }}
+                />
+                Shop Now
+              </Link>
             </motion.button>
             <motion.button
               className="px-8 py-3 rounded-full text-lg font-semibold border"
@@ -426,17 +316,19 @@ export default function Landing() {
                   patterns, this line embodies the freshness and vitality of
                   spring.
                 </p>
-                <motion.button
-                  className="px-6 py-2 rounded-full text-lg font-semibold self-start"
-                  style={{
-                    backgroundColor: colors.accent,
-                    color: colors.background,
-                  }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Explore Collection
-                </motion.button>
+                <Link href="/collection">
+                  <motion.button
+                    className="px-6 py-2 rounded-full text-lg font-semibold self-start"
+                    style={{
+                      backgroundColor: colors.accent,
+                      color: colors.background,
+                    }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Explore Collection
+                  </motion.button>
+                </Link>
               </div>
             </div>
           </div>
