@@ -215,7 +215,7 @@ export const OrderForm: React.FC<FormProps<OrderItem>> = ({
     />
     <FormInput
       id="totalPrice"
-      label="Monto Total"
+      label="Precio total"
       type="number"
       value={formData.totalPrice}
       onChange={(e) =>

@@ -136,25 +136,11 @@ export default function Navbar() {
                         Tienda
                       </NavLink>
                       <NavLink
-                        href="/categories"
-                        icon={Grid}
-                        onClick={toggleCascadeMenu}
-                      >
-                        Categorías
-                      </NavLink>
-                      <NavLink
                         href="/about"
                         icon={Info}
                         onClick={toggleCascadeMenu}
                       >
                         Acerca de
-                      </NavLink>
-                      <NavLink
-                        href="/contact"
-                        icon={Mail}
-                        onClick={toggleCascadeMenu}
-                      >
-                        Contacto
                       </NavLink>
                       <NavLink
                         href="/pages/profile"
@@ -213,15 +199,10 @@ export default function Navbar() {
               >
                 Tienda
               </NavLink>
-              <NavLink href="/categories" icon={Grid} onClick={toggleMenu}>
-                Categorías
-              </NavLink>
+              
               <NavLink href="/about" icon={Info} onClick={toggleMenu}>
                 Acerca de
-              </NavLink>
-              <NavLink href="/contact" icon={Mail} onClick={toggleMenu}>
-                Contacto
-              </NavLink>
+              </NavLink>    
               <NavLink href="/pages/profile" icon={User} onClick={toggleMenu}>
                 Perfil
               </NavLink>
@@ -239,11 +220,6 @@ export default function Navbar() {
                 >
                   Iniciar sesión
                 </motion.button>
-              </div>
-              <div className="mt-3 px-2 space-y-1">
-                <NavLink href="/cart" icon={ShoppingCart} onClick={toggleMenu}>
-                  Carrito
-                </NavLink>
               </div>
             </div>
           </motion.div>

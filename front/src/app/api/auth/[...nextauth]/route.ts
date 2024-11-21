@@ -2,11 +2,17 @@ import { connectDB } from "@/lib/mongodb";
 import User from "@/models/user";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
-
 
 const handler = NextAuth({
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+
+
+    }),
     CredentialsProvider({
       name: "Credentials",
       id: "credentials",
@@ -29,21 +35,22 @@ const handler = NextAuth({
 
         if (!passwordMatch) throw new Error("Invalid credentials");
 
-        console.log(userFound);
-
-        return userFound;
+        return { id: userFound._id, email: userFound.email };
       },
     }),
   ],
   pages: {
     signIn: "/login",
+    error: "/auth/error",
   },
   session: {
     strategy: "jwt",
   },
   callbacks: {
     async jwt({ token, user }) {
-      if (user) token.user = user;
+      if (user) {
+        token.user = user;
+      }
       return token;
     },
     async session({ session, token }) {
@@ -51,6 +58,8 @@ const handler = NextAuth({
       return session;
     },
   },
+  secret: process.env.NEXTAUTH_SECRET,
+  debug: true,
 });
 
 export { handler as GET, handler as POST };

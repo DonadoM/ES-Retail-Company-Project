@@ -59,7 +59,7 @@ export interface OrderItem extends BaseItem {
   customerName: string
   totalPrice: number
   status: "pending" | "completed" | "canceled"
-  createdAt: Date
+
 }
 
 export interface SupplyChainItem extends BaseItem {

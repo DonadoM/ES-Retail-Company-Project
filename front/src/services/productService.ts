@@ -1,12 +1,12 @@
 // services/productService.ts
-import axios from 'axios';
+import axios from "axios";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
 export const getProducts = async () => {
-  const response = await api.get('/products');
+  const response = await api.get("/products");
   return response.data;
 };
 
@@ -17,7 +17,7 @@ interface ProductData {
 }
 
 export const createProduct = async (productData: ProductData) => {
-  const response = await api.post('/products', productData);
+  const response = await api.post("/products", productData);
   return response.data;
 };
 

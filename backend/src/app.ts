@@ -6,11 +6,11 @@ import dotenv from "dotenv";
 import customerRoutes from "./routes/customerRoutes";
 import productRoutes from "./routes/productRoutes";
 import orderRoutes from "./routes/orderRoutes";
-import authRoutes from "./routes/authRoutes";
+// import authRoutes from "./routes/authRoutes";
 import inventoryRoutes from "./routes/inventoryRoutes";
 import supplyChainRoutes from "./routes/supplyChainRoutes";
 import promotionRoutes from "./routes/promotionRoutes";
-import userRoutes from "./routes/userRoutes";
+// import userRoutes from "./routes/userRoutes";
 
 dotenv.config();
 
@@ -40,8 +40,8 @@ connectDB();
 app.use("/api/customers", customerRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
-app.use("/api/auth", authRoutes);
+// app.use("/api/auth", authRoutes);
 app.use("/api/inventory", inventoryRoutes);
 app.use("/api/supplychain", supplyChainRoutes);
 app.use("/api/promotions", promotionRoutes);
-app.use("/api/users", userRoutes);
+// app.use("/api/users", userRoutes);

@@ -1,12 +1,12 @@
 // services/promotionService.ts
-import axios from 'axios';
+import axios from "axios";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
 export const getPromotions = async () => {
-  const response = await api.get('/promotions');
+  const response = await api.get("/promotions");
   return response.data;
 };
 
@@ -17,11 +17,14 @@ interface PromotionData {
 }
 
 export const createPromotion = async (promotionData: PromotionData) => {
-  const response = await api.post('/promotions', promotionData);
+  const response = await api.post("/promotions", promotionData);
   return response.data;
 };
 
-export const updatePromotion = async (id: string, promotionData: PromotionData) => {
+export const updatePromotion = async (
+  id: string,
+  promotionData: PromotionData
+) => {
   const response = await api.put(`/promotions/${id}`, promotionData);
   return response.data;
 };

@@ -13,11 +13,11 @@ const userSchema = new Schema<IUser>({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  role: { 
-    type: String, 
+  role: {
+    type: String,
     enum: ["user", "admin"], // Solo permite 'user' o 'admin'
-    default: "user" // Rol por defecto
-  }
+    default: "user", // Rol por defecto
+  },
 });
 
 const User = mongoose.model<IUser>("User", userSchema);

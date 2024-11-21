@@ -132,7 +132,6 @@ export default function LoginComponent() {
                 Recordar sesión
               </label>
             </div>
-
             <div className="text-sm">
               <a
                 href="#"
@@ -164,6 +163,14 @@ export default function LoginComponent() {
             </motion.button>
           </div>
         </form>
+        <div className="mt-6">
+          <button
+            onClick={() => signIn("google", { callbackUrl: "/pages/store" })}
+            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-[#E2E2B6] bg-[#DB4437] hover:bg-[#E57373] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#E57373]"
+          >
+            Iniciar sesión con Google
+          </button>
+        </div>
         <div className="mt-6">
           <p className="text-center text-sm text-[#03346E]">
             ¿No tienes una cuenta?{" "}

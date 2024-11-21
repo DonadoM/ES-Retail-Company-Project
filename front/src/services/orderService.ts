@@ -1,18 +1,17 @@
 // services/orderService.ts
 import axios from "axios";
 
-
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000", // Provide a default value
+  baseURL: process.env.NEXT_PUBLIC_API_URL, // Provide a default value
 });
 
 export const getOrders = async () => {
   try {
     const response = await api.get("/orders");
-    return response.data; // Asegúrate de que `response.data` es un array
+    return response.data;
   } catch (error) {
     console.error("Error fetching Orders data:", error);
-    return []; // Retorna un array vacío si hay un error
+    return [];
   }
 };
 
@@ -26,6 +25,7 @@ export const createOrder = async (orderData: {
     return response.data;
   } catch (error) {
     console.error("Error creating Order:", error);
+    return null;
   }
 };
 

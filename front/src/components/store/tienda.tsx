@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -7,9 +7,9 @@ import { motion } from "framer-motion";
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#222831]">
-      <main> 
+      <main>
         {/* Hero Section */}
-        <motion.section 
+        <motion.section
           className="relative h-[70vh]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -22,22 +22,19 @@ export default function LandingPage() {
             objectFit="cover"
             className="brightness-50"
           />
-          <motion.div 
+          <motion.div
             className="absolute inset-0 flex flex-col justify-center items-center text-white text-center"
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.8 }}
           >
             <h1 className="text-5xl md:text-6xl font-bold mb-4 text-[#EEEEEE]">
-              Welcome to VogueVerse
+              Welcome to 4F Wears
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-[#EEEEEE]">
               Discover the latest trends in fashion
             </p>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link
                 href="/new-arrivals"
                 className="bg-[#76ABAE] text-[#222831] px-8 py-3 rounded-full text-lg font-semibold hover:bg-[#76ABAE]/80 transition duration-300"
@@ -51,7 +48,7 @@ export default function LandingPage() {
         {/* Featured Categories */}
         <section className="py-16 bg-[#31363F]">
           <div className="container mx-auto px-4">
-            <motion.h2 
+            <motion.h2
               className="w-64 mx-auto text-3xl text-[#EEEEEE] text-center font-bold mb-12 bg-[#76ABAE] rounded-full hover:bg-[#76ABAE]/80 transition duration-300"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -59,7 +56,7 @@ export default function LandingPage() {
             >
               Featured Categories
             </motion.h2>
-            <motion.div 
+            <motion.div
               className="grid grid-cols-1 md:grid-cols-3 gap-8"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -101,7 +98,7 @@ export default function LandingPage() {
         {/* New Arrivals */}
         <section className="py-16 bg-[#222831]">
           <div className="container mx-auto px-4 ">
-            <motion.h2 
+            <motion.h2
               className="w-64 mx-auto text-3xl text-[#222831] text-center font-bold mb-12 bg-[#76ABAE] rounded-full hover:bg-[#76ABAE]/80 transition duration-300"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -109,7 +106,7 @@ export default function LandingPage() {
             >
               New Arrivals
             </motion.h2>
-            <motion.div 
+            <motion.div
               className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -145,7 +142,7 @@ export default function LandingPage() {
                       {item.name}
                     </h3>
                     <p className="text-[#76ABAE] mb-2">{item.price}</p>
-                    <motion.button 
+                    <motion.button
                       className="w-full bg-[#76ABAE] text-[#222831] py-2 rounded-full hover:bg-[#76ABAE]/80 transition duration-300"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
@@ -156,7 +153,7 @@ export default function LandingPage() {
                 </motion.div>
               ))}
             </motion.div>
-            <motion.div 
+            <motion.div
               className="text-center mt-12"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -173,14 +170,14 @@ export default function LandingPage() {
         </section>
 
         {/* Newsletter Signup */}
-        <motion.section 
+        <motion.section
           className="py-16 bg-[#31363F] text-[#EEEEEE]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
           <div className="container mx-auto px-4 text-center">
-            <motion.h2 
+            <motion.h2
               className="text-3xl font-bold mb-4"
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -188,7 +185,7 @@ export default function LandingPage() {
             >
               Stay Updated
             </motion.h2>
-            <motion.p 
+            <motion.p
               className="mb-8"
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -197,7 +194,7 @@ export default function LandingPage() {
               Subscribe to our newsletter for exclusive offers and the latest
               fashion trends.
             </motion.p>
-            <motion.form 
+            <motion.form
               className="max-w-md mx-auto flex"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -230,10 +227,10 @@ export default function LandingPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <h3 className="text-xl font-semibold mb-4">About VogueVerse</h3>
+              <h3 className="text-xl font-semibold mb-4">About 4F Wears</h3>
               <p className="text-[#76ABAE]">
                 Discover the latest fashion trends and express your unique style
-                with VogueVerse.
+                with 4F Wears.
               </p>
             </motion.div>
             <motion.div
@@ -260,7 +257,10 @@ export default function LandingPage() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/faq" className="text-[#76ABAE] hover:text-[#76ABAE]/80">
+                  <Link
+                    href="/faq"
+                    className="text-[#76ABAE] hover:text-[#76ABAE]/80"
+                  >
                     FAQ
                   </Link>
                 </li>
@@ -326,14 +326,14 @@ export default function LandingPage() {
               </div>
             </motion.div>
           </div>
-          <motion.div 
+          <motion.div
             className="mt-8 text-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.5 }}
           >
             <p className="text-[#76ABAE] text-sm">
-              &copy; 2024 VogueVerse. All rights reserved.
+              &copy; 2024 4F Wears. All rights reserved.
             </p>
           </motion.div>
         </div>

@@ -182,7 +182,7 @@ const FeatureCard: React.FC<{ feature: Feature; index: number }> = ({
   );
 };
 
-export default function Landing() {
+export default function AboutUs() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
