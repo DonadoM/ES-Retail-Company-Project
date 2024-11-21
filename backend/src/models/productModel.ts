@@ -23,6 +23,11 @@ const productSchema = new Schema({
     required: true,
     default: 0,
   },
+
+  imageUrl: {
+    type: String,
+    required: true,
+  }
 });
 
 // Crear el modelo de Producto

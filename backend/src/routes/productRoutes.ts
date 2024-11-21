@@ -4,6 +4,7 @@ import {
   deleteProduct,
   getProducts,
   updateProduct,
+  upload,
 } from "../controllers/productController";
 
 const router = Router();
@@ -12,15 +13,12 @@ const router = Router();
 router.get("/", getProducts);
 
 // Ruta para crear un nuevo producto
-router.post("/", createProduct);
+router.post("/", upload.single('image'), createProduct);
 
 // Ruta para actualizar un producto por su ID
-router.put("/:id", updateProduct);
+router.put("/:id", upload.single('image'), updateProduct);
 
 // Ruta para eliminar un producto por su ID
-
 router.delete("/:id", deleteProduct);
-
-
 
 export default router;

@@ -4,8 +4,6 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ClothingItem } from "@/components/Clothing/ClothingItem";
 import { Cart } from "@/components/Cart";
-import { colors } from "@/lib/colors";
-import { MovingBackground } from "@/components/Home/MovingBackground";
 
 interface ClothingItemData {
   _id: string;
@@ -27,9 +25,10 @@ export default function CollectionPage() {
     fetch("https://backend-service-9xuv.onrender.com/api/products")
       .then((response) => response.json())
       .then((data) => {
+        // Add a placeholder image URL if not provided by the API
         const itemsWithImages = data.map((item: ClothingItemData) => ({
           ...item,
-          imageUrl: item.imageUrl || "/placeholder.svg?height=400&width=300"
+          imageUrl: item.imageUrl || "/placeholder.jpg"
         }));
         setItems(itemsWithImages);
         setLoading(false);
@@ -52,22 +51,20 @@ export default function CollectionPage() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden dark:bg-gray-900 dark:text-white">
-      <MovingBackground />
+    <div className="min-h-screen bg-gray-100">
       <Cart />
-      <main className="container mx-auto px-4 py-12 relative z-10">
+      <main className="container mx-auto px-4 py-12">
         <motion.h1
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-4xl font-bold text-center mb-8"
-          style={{ color: colors.accent }}
+          className="text-4xl font-bold text-center mb-8 text-gray-800"
         >
           Our Collection
         </motion.h1>
 
         {loading ? (
-          <div className="text-center">Loading...</div>
+          <div className="text-center text-gray-800">Loading...</div>
         ) : (
           <>
             <div className="flex justify-center mb-8 space-x-4 flex-wrap">
@@ -79,10 +76,9 @@ export default function CollectionPage() {
                   onClick={() => setFilter(category)}
                   className={`px-4 py-2 rounded-full font-semibold m-2 ${
                     filter === category
-                      ? "bg-accent text-gray-900"
-                      : "bg-gray-700 text-white"
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-gray-800"
                   }`}
-                  style={{ backgroundColor: filter === category ? colors.accent : undefined }}
                 >
                   {category}
                 </motion.button>
