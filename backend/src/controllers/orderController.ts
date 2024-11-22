@@ -1,10 +1,11 @@
-import Order from '../models/orderModel.js';
+import { Request, Response } from 'express';
+import Order from '../models/orderModel';
 import asyncHandler from 'express-async-handler';
 
 // @desc    Get all orders
 // @route   GET /api/orders
 // @access  Private/Admin
-const getOrders = asyncHandler(async (req, res) => {
+const getOrders = asyncHandler(async (req: Request, res: Response) => {
   const orders = await Order.find({}).populate('items.product', 'name');
   res.json(orders);
 });
@@ -12,7 +13,7 @@ const getOrders = asyncHandler(async (req, res) => {
 // @desc    Get order by ID
 // @route   GET /api/orders/:id
 // @access  Private
-const getOrderById = asyncHandler(async (req, res) => {
+const getOrderById = asyncHandler(async (req: Request, res: Response) => {
   const order = await Order.findById(req.params.id).populate('items.product', 'name');
   if (order) {
     res.json(order);
@@ -25,7 +26,7 @@ const getOrderById = asyncHandler(async (req, res) => {
 // @desc    Create new order
 // @route   POST /api/orders
 // @access  Private
-const createOrder = asyncHandler(async (req, res) => {
+const createOrder = asyncHandler(async (req: Request, res: Response) => {
   const { orderNumber, customerName, totalAmount, status, items } = req.body;
 
   if (!items || items.length === 0) {
@@ -48,7 +49,7 @@ const createOrder = asyncHandler(async (req, res) => {
 // @desc    Update order
 // @route   PUT /api/orders/:id
 // @access  Private/Admin
-const updateOrder = asyncHandler(async (req, res) => {
+const updateOrder = asyncHandler(async (req: Request, res: Response) => {
   const { orderNumber, customerName, totalAmount, status, items } = req.body;
 
   const order = await Order.findById(req.params.id);
@@ -71,7 +72,7 @@ const updateOrder = asyncHandler(async (req, res) => {
 // @desc    Delete order
 // @route   DELETE /api/orders/:id
 // @access  Private/Admin
-const deleteOrder = asyncHandler(async (req, res) => {
+const deleteOrder = asyncHandler(async (req: Request, res: Response) => {
   const order = await Order.findById(req.params.id);
 
   if (order) {
