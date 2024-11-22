@@ -8,14 +8,10 @@ import {
   useTransform,
   useSpring,
   useAnimation,
-  AnimatePresence,
+ 
 } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { colors } from "../../lib/colors";
-import { MovingBackground } from "./MovingBackground";
-import { Navigation } from "./Navigation";
-// import { MobileMenu } from "./MobileMenu";
-import { DarkModeToggle } from "./DarkModeToggle";
 import { FeatureCard } from "./FeaturedCard";
 
 const AnimatedText: React.FC<{ children: React.ReactNode; delay?: number }> = ({

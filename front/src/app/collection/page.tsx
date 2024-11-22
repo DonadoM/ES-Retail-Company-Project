@@ -25,7 +25,7 @@ export default function CollectionPage() {
     fetch("https://backend-service-9xuv.onrender.com/api/products")
       .then((response) => response.json())
       .then((data) => {
-        // Add a placeholder image URL if not provided by the API
+       
         const itemsWithImages = data.map((item: ClothingItemData) => ({
           ...item,
           imageUrl: item.imageUrl || "/placeholder.jpg"

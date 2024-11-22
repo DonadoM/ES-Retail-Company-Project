@@ -26,7 +26,8 @@ export default function EditSupplyChainItemPage({ params }: { params: { id: stri
 
   useEffect(() => {
     fetchItem()
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.id])
 
   const fetchItem = async () => {
     try {
@@ -37,7 +38,7 @@ export default function EditSupplyChainItemPage({ params }: { params: { id: stri
       const data = await response.json()
       setItem(data)
       setLoading(false)
-    } catch (err) {
+    } catch  {
       setError('Failed to fetch supply chain item')
       setLoading(false)
       toast.error('Failed to fetch supply chain item')
@@ -61,7 +62,7 @@ export default function EditSupplyChainItemPage({ params }: { params: { id: stri
       }
       toast.success('Supply chain item updated successfully')
       router.push('/admin/supply-chain')
-    } catch (err) {
+    } catch {
       toast.error('Failed to update supply chain item')
     }
   }

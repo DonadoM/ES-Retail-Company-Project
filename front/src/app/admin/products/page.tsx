@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Package, DollarSign, Archive } from "lucide-react";
-
+import Image from "next/image";
 const colors = {
   background: "#31363F",
   text: "#EEEEEE",
@@ -181,10 +181,12 @@ export default function AdminProductsPage() {
             >
               <CardContent className="p-0">
                 {product.imageUrl && (
-                  <img
+                  <Image
                     src={product.imageUrl}
                     alt={product.name}
                     className="w-full h-48 object-cover"
+                    width={500}
+                    height={300}
                   />
                 )}
                 <div className="p-4 space-y-2">

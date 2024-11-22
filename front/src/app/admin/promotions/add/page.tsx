@@ -45,7 +45,7 @@ export default function AddPromotionPage() {
       }
       toast.success('Promotion added successfully')
       router.push('/admin/promotions')
-    } catch (err) {
+    } catch  {
       toast.error('Failed to add promotion')
     }
   }

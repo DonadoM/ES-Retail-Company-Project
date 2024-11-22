@@ -38,7 +38,7 @@ export default function AddSupplyChainItemPage() {
       }
       toast.success('Supply chain item added successfully')
       router.push('/admin/supply-chain')
-    } catch (err) {
+    } catch  {
       toast.error('Failed to add supply chain item')
     }
   }

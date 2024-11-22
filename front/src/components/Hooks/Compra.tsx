@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { ClothingItem } from "@/components/Clothing/ClothingItem";
 import { Cart } from "@/components/Cart";
 import { MovingBackground } from "@/components//Home/MovingBackground";
-import { Navigation } from "@/components/Home/Navigation";
+
 import { colors } from "@/lib/colors";
 
 interface ClothingItemData {
@@ -43,7 +43,6 @@ export default function PageSingle() {
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <MovingBackground />
-      <Navigation />
       <Cart />
 
       <main className="container mx-auto px-4 py-12 relative z-10">
@@ -96,9 +95,9 @@ export default function PageSingle() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <ClothingItem onAddToCart={function (item: ClothingItemData): void {
-                          throw new Error("Function not implemented.");
-                      } } {...item} />
+                  <ClothingItem imageUrl={""} onAddToCart={function (item: ClothingItemData): void {
+                    throw new Error("Function not implemented.");
+                  } } {...item} />
                 </motion.div>
               ))}
             </motion.div>

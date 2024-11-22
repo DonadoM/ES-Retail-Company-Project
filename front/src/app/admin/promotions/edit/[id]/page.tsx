@@ -29,6 +29,7 @@ export default function EditPromotionPage({ params }: { params: { id: string } }
 
   useEffect(() => {
     fetchPromotion()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const fetchPromotion = async () => {
@@ -40,7 +41,7 @@ export default function EditPromotionPage({ params }: { params: { id: string } }
       const data = await response.json()
       setPromotion(data)
       setLoading(false)
-    } catch (err) {
+    } catch  {
       setError('Failed to fetch promotion')
       setLoading(false)
       toast.error('Failed to fetch promotion')
@@ -64,7 +65,7 @@ export default function EditPromotionPage({ params }: { params: { id: string } }
       }
       toast.success('Promotion updated successfully')
       router.push('/admin/promotions')
-    } catch (err) {
+    } catch {
       toast.error('Failed to update promotion')
     }
   }

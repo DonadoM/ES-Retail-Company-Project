@@ -10,7 +10,6 @@ import {
   ShoppingBag,
   Info,
   User,
-  ChevronDown,
   Menu,
   X,
   Sun,

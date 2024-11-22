@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+
 import {
   Table,
   TableBody,
@@ -46,7 +46,7 @@ export default function SupplyChainPage() {
       const data = await response.json();
       setItems(data);
       setLoading(false);
-    } catch (err) {
+    } catch {
       setError("Failed to fetch supply chain items");
       setLoading(false);
       toast.error("Failed to fetch supply chain items");
@@ -66,7 +66,7 @@ export default function SupplyChainPage() {
       }
       setItems(items.filter((item) => item._id !== id));
       toast.success("Supply chain item deleted successfully");
-    } catch (err) {
+    } catch {
       toast.error("Failed to delete supply chain item");
     }
   };
