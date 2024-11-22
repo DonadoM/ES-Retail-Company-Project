@@ -1,48 +1,153 @@
-// backend/src/controllers/promotionsController.ts
+import { Request, Response } from 'express';
+import asyncHandler from 'express-async-handler';
+import Promotion, { IPromotion } from '../models/promotionModel';
 
-import { Request, Response } from "express";
-import Promotion, { IPromotion } from "../models/promotionModel";
+// Get all promotions
+export const getPromotions = asyncHandler(async (req: Request, res: Response) => {
+  const promotions = await Promotion.find({});
+  res.json(promotions);
+});
 
-export const getPromotions = async (req: Request, res: Response) => {
-  try {
-    const promotions: IPromotion[] = await Promotion.find();
-    res.json(promotions);
-  } catch (error) {
-    res.status(500).json({ message: "Error retrieving promotions" });
+// Get a single promotion by ID
+export const getPromotionById = asyncHandler(async (req: Request, res: Response) => {
+  const promotion = await Promotion.findById(req.params.id);
+  if (promotion) {
+    res.json(promotion);
+  } else {
+    res.status(404);
+    throw new Error('Promotion not found');
   }
-};
-export const addPromotion = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const newPromotion = new Promotion(req.body);
-    const savedPromotion = await newPromotion.save();
-    res.status(201).json(savedPromotion); // Ensure we send the saved object in JSON format
-  } catch (error) {
-    res.status(400).json({ message: "Error creating promotion" });
-  }
-};
-export const deletePromotion = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  try {
-    await Promotion.findByIdAndDelete(id);
-    res.json({ message: "Promotion deleted" });
-  } catch (error) {
-    res.status(400).json({ message: "Error deleting promotion" });
-  }
-};
+});
 
-export const updatePromotion = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { title, discount, startDate, endDate, channels } = req.body;
-  try {
-    await Promotion.findByIdAndUpdate(id, {
-      title,
-      discount,
-      startDate,
-      endDate,
-      channels,
-    });
-    res.json({ message: "Promotion updated" });
-  } catch (error) {
-    res.status(400).json({ message: "Error updating promotion" });
+// Create a new promotion
+export const createPromotion = asyncHandler(async (req: Request, res: Response) => {
+  const {
+    code,
+    description,
+    discountType,
+    discountValue,
+    startDate,
+    endDate,
+    isActive,
+    applicableProducts,
+    minimumPurchaseAmount,
+    usageLimit
+  } = req.body;
+
+  const promotionExists = await Promotion.findOne({ code });
+
+  if (promotionExists) {
+    res.status(400);
+    throw new Error('Promotion code already exists');
   }
-};
+
+  const promotion = new Promotion({
+    code,
+    description,
+    discountType,
+    discountValue,
+    startDate,
+    endDate,
+    isActive,
+    applicableProducts,
+    minimumPurchaseAmount,
+    usageLimit
+  });
+
+  const createdPromotion = await promotion.save();
+  res.status(201).json(createdPromotion);
+});
+
+// Update a promotion
+export const updatePromotion = asyncHandler(async (req: Request, res: Response) => {
+  const {
+    code,
+    description,
+    discountType,
+    discountValue,
+    startDate,
+    endDate,
+    isActive,
+    applicableProducts,
+    minimumPurchaseAmount,
+    usageLimit
+  } = req.body;
+
+  const promotion = await Promotion.findById(req.params.id);
+
+  if (promotion) {
+    promotion.code = code || promotion.code;
+    promotion.description = description || promotion.description;
+    promotion.discountType = discountType || promotion.discountType;
+    promotion.discountValue = discountValue || promotion.discountValue;
+    promotion.startDate = startDate || promotion.startDate;
+    promotion.endDate = endDate || promotion.endDate;
+    promotion.isActive = isActive !== undefined ? isActive : promotion.isActive;
+    promotion.applicableProducts = applicableProducts || promotion.applicableProducts;
+    promotion.minimumPurchaseAmount = minimumPurchaseAmount || promotion.minimumPurchaseAmount;
+    promotion.usageLimit = usageLimit || promotion.usageLimit;
+
+    const updatedPromotion = await promotion.save();
+    res.json(updatedPromotion);
+  } else {
+    res.status(404);
+    throw new Error('Promotion not found');
+  }
+});
+
+// Delete a promotion
+export const deletePromotion = asyncHandler(async (req: Request, res: Response) => {
+  const promotion = await Promotion.findById(req.params.id);
+
+  if (promotion) {
+    await promotion.remove();
+    res.json({ message: 'Promotion removed' });
+  } else {
+    res.status(404);
+    throw new Error('Promotion not found');
+  }
+});
+
+// Apply a promotion
+export const applyPromotion = asyncHandler(async (req: Request, res: Response) => {
+  const { code, cartTotal, products } = req.body;
+
+  const promotion = await Promotion.findOne({ code, isActive: true });
+
+  if (!promotion) {
+    res.status(404);
+    throw new Error('Invalid or inactive promotion code');
+  }
+
+  if (new Date() < promotion.startDate || new Date() > promotion.endDate) {
+    res.status(400);
+    throw new Error('Promotion is not currently active');
+  }
+
+  if (promotion.usageLimit > 0 && promotion.usageCount >= promotion.usageLimit) {
+    res.status(400);
+    throw new Error('Promotion usage limit has been reached');
+  }
+
+  if (cartTotal < promotion.minimumPurchaseAmount) {
+    res.status(400);
+    throw new Error(`Minimum purchase amount of ${promotion.minimumPurchaseAmount} not met`);
+  }
+
+  let discountAmount = 0;
+  if (promotion.discountType === 'percentage') {
+    discountAmount = cartTotal * (promotion.discountValue / 100);
+  } else {
+    discountAmount = promotion.discountValue;
+  }
+
+  // Increment usage count
+  promotion.usageCount += 1;
+  await promotion.save();
+
+  res.json({
+    discountAmount,
+    finalTotal: cartTotal - discountAmount
+  });
+});
+

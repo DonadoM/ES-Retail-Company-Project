@@ -19,7 +19,7 @@ export default function AddSupplyChainItemPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/supply-chain`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/supply-chain`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

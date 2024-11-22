@@ -1,18 +1,23 @@
-// backend/src/routes/promotionsRoutes.ts
-
-import { Router } from "express";
+import express from "express";
 import {
   getPromotions,
-  addPromotion,
+  getPromotionById,
+  createPromotion,
   updatePromotion,
   deletePromotion,
+  applyPromotion,
 } from "../controllers/promotionsController";
 
-const router = Router();
+const router = express.Router();
 
-router.get("/", getPromotions);
-router.post("/", addPromotion);
-router.put("/:id", updatePromotion);
-router.delete("/:id", deletePromotion);
+router.route("/").get(getPromotions).post(createPromotion);
+
+router
+  .route("/:id")
+  .get(getPromotionById)
+  .put(updatePromotion)
+  .delete(deletePromotion);
+
+router.post("/apply", applyPromotion);
 
 export default router;
