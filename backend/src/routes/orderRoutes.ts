@@ -1,19 +1,23 @@
-// src/routes/orderRoutes.ts
-import express from "express";
-import {
-  createOrder,
-  getOrders,
-  getOrderById,
-  updateOrder,
-  deleteOrder,
-} from "../controllers/orderController";
+import express from 'express';
+import { 
+  getOrders, 
+  getOrderById, 
+  createOrder, 
+  updateOrder, 
+  deleteOrder 
+} from '../controllers/orderController.js';
 
 const router = express.Router();
 
-router.post("/", createOrder);
-router.get("/", getOrders);
-router.get("/:id", getOrderById);
-router.put("/:id", updateOrder);
-router.delete("/:id", deleteOrder);
+router.route('/')
+  .get(getOrders)
+  .post(createOrder);
+
+router.route('/:id')
+  .get(getOrderById)
+  .put(updateOrder)
+  .delete(deleteOrder);
 
 export default router;
+
+console.log('Order routes created successfully');

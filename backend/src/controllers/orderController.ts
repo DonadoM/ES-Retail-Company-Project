@@ -1,84 +1,88 @@
-import { Request, Response } from "express";
-import { Order } from "../models/orderModel";
+import Order from '../models/orderModel.js';
+import asyncHandler from 'express-async-handler';
 
-// Create Order
-export const createOrder = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { customerName, totalPrice, status } = req.body;
+// @desc    Get all orders
+// @route   GET /api/orders
+// @access  Private/Admin
+const getOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find({}).populate('items.product', 'name');
+  res.json(orders);
+});
 
-    if (!customerName || !totalPrice) {
-      res.status(400).json({ error: "Invalid request. Missing fields." });
-      return;
-    }
+// @desc    Get order by ID
+// @route   GET /api/orders/:id
+// @access  Private
+const getOrderById = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id).populate('items.product', 'name');
+  if (order) {
+    res.json(order);
+  } else {
+    res.status(404);
+    throw new Error('Order not found');
+  }
+});
 
+// @desc    Create new order
+// @route   POST /api/orders
+// @access  Private
+const createOrder = asyncHandler(async (req, res) => {
+  const { orderNumber, customerName, totalAmount, status, items } = req.body;
+
+  if (!items || items.length === 0) {
+    res.status(400);
+    throw new Error('No order items');
+  } else {
     const order = new Order({
+      orderNumber,
       customerName,
-      totalPrice,
-      status: status || "pending",
+      totalAmount,
+      status,
+      items
     });
 
-    const savedOrder = await order.save();
-    res.status(201).json({ message: "Order created successfully", order: savedOrder });
-  } catch (error) {
-    res.status(500).json({ error: "Failed to create order", details: error });
+    const createdOrder = await order.save();
+    res.status(201).json(createdOrder);
   }
-};
+});
 
-// Get All Orders
-export const getOrders = async (_req: Request, res: Response): Promise<void> => {
-  try {
-    const orders = await Order.find();
-    res.status(200).json(orders);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve orders", details: error });
+// @desc    Update order
+// @route   PUT /api/orders/:id
+// @access  Private/Admin
+const updateOrder = asyncHandler(async (req, res) => {
+  const { orderNumber, customerName, totalAmount, status, items } = req.body;
+
+  const order = await Order.findById(req.params.id);
+
+  if (order) {
+    order.orderNumber = orderNumber || order.orderNumber;
+    order.customerName = customerName || order.customerName;
+    order.totalAmount = totalAmount || order.totalAmount;
+    order.status = status || order.status;
+    order.items = items || order.items;
+
+    const updatedOrder = await order.save();
+    res.json(updatedOrder);
+  } else {
+    res.status(404);
+    throw new Error('Order not found');
   }
-};
+});
 
-// Get Order by ID
-export const getOrderById = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const order = await Order.findById(req.params.id);
-    if (!order) {
-      res.status(404).json({ error: "Order not found" });
-      return;
-    }
-    res.status(200).json(order);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve order", details: error });
+// @desc    Delete order
+// @route   DELETE /api/orders/:id
+// @access  Private/Admin
+const deleteOrder = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+
+  if (order) {
+    await order.remove();
+    res.json({ message: 'Order removed' });
+  } else {
+    res.status(404);
+    throw new Error('Order not found');
   }
-};
+});
 
-// Update Order
-export const updateOrder = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const order = await Order.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+export { getOrders, getOrderById, createOrder, updateOrder, deleteOrder };
 
-    if (!order) {
-      res.status(404).json({ error: "Order not found" });
-      return;
-    }
-
-    res.status(200).json({ message: "Order updated successfully", order });
-  } catch (error) {
-    res.status(500).json({ error: "Failed to update order", details: error });
-  }
-};
-
-// Delete Order
-export const deleteOrder = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const order = await Order.findByIdAndDelete(req.params.id);
-
-    if (!order) {
-      res.status(404).json({ error: "Order not found" });
-      return;
-    }
-
-    res.status(200).json({ message: "Order deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ error: "Failed to delete order", details: error });
-  }
-};
+console.log('Order controller created successfully');

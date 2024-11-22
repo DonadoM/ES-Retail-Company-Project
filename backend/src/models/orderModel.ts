@@ -1,24 +1,50 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose from 'mongoose';
 
-export interface IOrder extends Document {
-  customerName: string;
-  totalPrice: number;
-  status: "pending" | "completed" | "canceled";
-}
-
-const orderSchema: Schema = new Schema(
-  {
-    customerName: { type: String, required: true },
-    totalPrice: { type: Number, required: true },
-    status: {
-      type: String,
-      enum: ["pending", "completed", "canceled"],
-      default: "pending",
-    },
+const orderSchema = new mongoose.Schema({
+  orderNumber: {
+    type: String,
+    required: true,
+    unique: true
   },
-  {
-    timestamps: true,
-  }
-);
+  customerName: {
+    type: String,
+    required: true
+  },
+  orderDate: {
+    type: Date,
+    required: true,
+    default: Date.now
+  },
+  totalAmount: {
+    type: Number,
+    required: true
+  },
+  status: {
+    type: String,
+    required: true,
+    enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
+    default: 'Pending'
+  },
+  items: [{
+    product: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Product',
+      required: true
+    },
+    quantity: {
+      type: Number,
+      required: true,
+      min: 1
+    },
+    price: {
+      type: Number,
+      required: true
+    }
+  }]
+}, { timestamps: true });
 
-export const Order = mongoose.model<IOrder>("Order", orderSchema);
+const Order = mongoose.model('Order', orderSchema);
+
+export default Order;
+
+console.log('Order model created successfully');
