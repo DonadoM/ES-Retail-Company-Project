@@ -153,6 +153,14 @@ export const ProductForm: React.FC<FormProps<ProductItem>> = ({
       }
       error={formErrors.stock}
     />
+    <FormInput
+      id="imageUrl"
+      label="URL de la Imagen"
+      type="text"
+      value={formData.imageUrl || ""}
+      onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+      error={formErrors.imageUrl}
+    />
   </>
 );
 

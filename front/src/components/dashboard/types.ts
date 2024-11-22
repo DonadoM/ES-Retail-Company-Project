@@ -46,6 +46,7 @@ export interface ProductItem extends BaseItem {
   category: string
   description: string
   stock: number
+  imageUrl?: string;
 }
 
 export interface CustomerItem extends BaseItem {

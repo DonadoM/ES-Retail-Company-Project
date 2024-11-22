@@ -14,6 +14,9 @@ interface ProductData {
   name: string;
   price: number;
   description?: string;
+  category: string;
+  stock: number;
+  imageUrl?: string;
 }
 
 export const createProduct = async (productData: ProductData) => {

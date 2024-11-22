@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { ProductForm } from '@/components/Admin/ProductForm';
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { AlertCircle } from 'lucide-react'
 
 interface Product {
   _id: string;
@@ -55,14 +56,16 @@ export default function AdminProductsPage() {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json().catch(() => null);
+        console.error('Server response:', response.status, errorData);
+        throw new Error(`HTTP error! status: ${response.status}, message: ${JSON.stringify(errorData)}`);
       }
 
       await fetchProducts();
       setEditingProduct(null);
     } catch (error) {
       console.error('Error saving product:', error);
-      setError('Failed to save product. Please try again.');
+      setError('Failed to save product. Please check the console for more details.');
     }
   };
 
@@ -85,16 +88,10 @@ export default function AdminProductsPage() {
     }
   };
 
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Gestión de Productos</h1>
-      
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-          <strong className="font-bold">Error: </strong>
-          <span className="block sm:inline">{error}</span>
-        </div>
-      )}
       
       <Card className="mb-8">
         <CardHeader>
