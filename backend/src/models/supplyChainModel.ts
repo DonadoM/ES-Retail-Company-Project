@@ -1,19 +1,31 @@
-// backend/src/models/supplyChainModel.ts
+import mongoose, { Document, Schema } from 'mongoose';
 
-import mongoose, { Schema, Document } from "mongoose";
-
-export interface ISupplyChain extends Document {
-  productId: string;
+export interface ISupplyChainItem extends Document {
+  itemName: string;
+  sku: string;
   quantity: number;
   supplier: string;
-  deliveryDate: Date;
+  status: 'Ordered' | 'In Transit' | 'Received' | 'Quality Check' | 'In Stock';
+  expectedDeliveryDate: Date;
+  actualDeliveryDate?: Date;
 }
 
-const SupplyChainSchema: Schema = new Schema({
-  productId: { type: String, required: true },
+const supplyChainSchema: Schema = new Schema({
+  itemName: { type: String, required: true },
+  sku: { type: String, required: true, unique: true },
   quantity: { type: Number, required: true },
   supplier: { type: String, required: true },
-  deliveryDate: { type: Date, required: true },
+  status: { 
+    type: String, 
+    required: true, 
+    enum: ['Ordered', 'In Transit', 'Received', 'Quality Check', 'In Stock'],
+    default: 'Ordered'
+  },
+  expectedDeliveryDate: { type: Date, required: true },
+  actualDeliveryDate: { type: Date }
+}, {
+  timestamps: true
 });
 
-export default mongoose.model<ISupplyChain>("SupplyChain", SupplyChainSchema);
+export default mongoose.model<ISupplyChainItem>('SupplyChainItem', supplyChainSchema);
+

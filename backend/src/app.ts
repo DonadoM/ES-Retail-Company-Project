@@ -52,6 +52,6 @@ app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 // app.use("/api/auth", authRoutes);
 app.use("/api/inventory", inventoryRoutes);
-app.use("/api/supplychain", supplyChainRoutes);
+app.use("/api/supply-chain", supplyChainRoutes);
 app.use("/api/promotions", promotionRoutes);
 // app.use("/api/users", userRoutes);

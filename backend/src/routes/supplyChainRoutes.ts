@@ -1,17 +1,22 @@
-// backend/src/routes/supplyChainRoutes.ts
-
-import { Router } from "express";
+import express from 'express';
 import {
-  getSupplyChains,
-  addSupplyChain,
-  deleteSupplyChain,
-  updateSupplyChain,
-} from "../controllers/supplyChainController";
+  getSupplyChainItems,
+  getSupplyChainItemById,
+  createSupplyChainItem,
+  updateSupplyChainItem,
+  deleteSupplyChainItem
+} from '../controllers/supplyChainController';
 
-const router = Router();
+const router = express.Router();
 
-router.get("/", getSupplyChains);
-router.post("/", addSupplyChain);
-router.delete("/:id", deleteSupplyChain);
-router.put("/:id", updateSupplyChain);
+router.route('/')
+  .get(getSupplyChainItems)
+  .post(createSupplyChainItem);
+
+router.route('/:id')
+  .get(getSupplyChainItemById)
+  .put(updateSupplyChainItem)
+  .delete(deleteSupplyChainItem);
+
 export default router;
+

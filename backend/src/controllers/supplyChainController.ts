@@ -1,58 +1,74 @@
-// backend/src/controllers/supplyChainController.ts
+import { Request, Response } from 'express';
+import asyncHandler from 'express-async-handler';
+import SupplyChainItem, { ISupplyChainItem } from '../models/supplyChainModel';
 
-import { Request, Response } from "express";
-import SupplyChain, { ISupplyChain } from "../models/supplyChainModel";
+// Get all supply chain items
+export const getSupplyChainItems = asyncHandler(async (req: Request, res: Response) => {
+  const items = await SupplyChainItem.find({});
+  res.json(items);
+});
 
-export const getSupplyChains = async (req: Request, res: Response) => {
-  try {
-    const supplyChains: ISupplyChain[] = await SupplyChain.find();
-    res.json(supplyChains);
-  } catch (error) {
-    res.status(500).json({ message: "Error retrieving supply chains" });
+// Get a single supply chain item by ID
+export const getSupplyChainItemById = asyncHandler(async (req: Request, res: Response) => {
+  const item = await SupplyChainItem.findById(req.params.id);
+  if (item) {
+    res.json(item);
+  } else {
+    res.status(404);
+    throw new Error('Supply chain item not found');
   }
-};
+});
 
-export const addSupplyChain = async (req: Request, res: Response) => {
-  const { productId, quantity, supplier, deliveryDate } = req.body;
+// Create a new supply chain item
+export const createSupplyChainItem = asyncHandler(async (req: Request, res: Response) => {
+  const { itemName, sku, quantity, supplier, status, expectedDeliveryDate } = req.body;
 
-  try {
-    const newSupplyChain = new SupplyChain({
-      productId,
-      quantity,
-      supplier,
-      deliveryDate,
-    });
+  const newItem = new SupplyChainItem({
+    itemName,
+    sku,
+    quantity,
+    supplier,
+    status,
+    expectedDeliveryDate
+  });
 
-    const savedSupplyChain = await newSupplyChain.save(); // Guardar el nuevo suministro
-    res.status(201).json(savedSupplyChain); // Asegúrate de enviar el objeto guardado
-  } catch (error) {
-    res.status(400).json({ message: "Error adding supply chain" }); // Manejar el error adecuadamente
+  const createdItem = await newItem.save();
+  res.status(201).json(createdItem);
+});
+
+// Update a supply chain item
+export const updateSupplyChainItem = asyncHandler(async (req: Request, res: Response) => {
+  const { itemName, sku, quantity, supplier, status, expectedDeliveryDate, actualDeliveryDate } = req.body;
+
+  const item = await SupplyChainItem.findById(req.params.id);
+
+  if (item) {
+    item.itemName = itemName || item.itemName;
+    item.sku = sku || item.sku;
+    item.quantity = quantity || item.quantity;
+    item.supplier = supplier || item.supplier;
+    item.status = status || item.status;
+    item.expectedDeliveryDate = expectedDeliveryDate || item.expectedDeliveryDate;
+    item.actualDeliveryDate = actualDeliveryDate || item.actualDeliveryDate;
+
+    const updatedItem = await item.save();
+    res.json(updatedItem);
+  } else {
+    res.status(404);
+    throw new Error('Supply chain item not found');
   }
-};
+});
 
+// Delete a supply chain item
+export const deleteSupplyChainItem = asyncHandler(async (req: Request, res: Response) => {
+  const item = await SupplyChainItem.findById(req.params.id);
 
-export const deleteSupplyChain = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  try {
-    await SupplyChain.findByIdAndDelete(id);
-    res.json({ message: "Supply chain deleted" });
-  } catch (error) {
-    res.status(400).json({ message: "Error deleting supply chain" });
+  if (item) {
+    await item.remove();
+    res.json({ message: 'Supply chain item removed' });
+  } else {
+    res.status(404);
+    throw new Error('Supply chain item not found');
   }
-};
+});
 
-export const updateSupplyChain = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { productId, quantity, supplier, deliveryDate } = req.body;
-  try {
-    await SupplyChain.findByIdAndUpdate(id, {
-      productId,
-      quantity,
-      supplier,
-      deliveryDate,
-    });
-    res.json({ message: "Supply chain updated" });
-  } catch (error) {
-    res.status(400).json({ message: "Error updating supply chain" });
-  }
-};
