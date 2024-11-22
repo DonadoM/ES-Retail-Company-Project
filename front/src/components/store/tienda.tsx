@@ -36,7 +36,7 @@ export default function LandingPage() {
             </p>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link
-                href="/new-arrivals"
+                href="/collection"
                 className="bg-[#76ABAE] text-[#222831] px-8 py-3 rounded-full text-lg font-semibold hover:bg-[#76ABAE]/80 transition duration-300"
               >
                 Shop New Arrivals
@@ -83,7 +83,7 @@ export default function LandingPage() {
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
                     <Link
-                      href={`/${category.toLowerCase()}`}
+                        href="/collection"
                       className="text-[#EEEEEE] text-2xl font-semibold hover:underline"
                     >
                       Shop {category}
@@ -160,7 +160,7 @@ export default function LandingPage() {
               transition={{ delay: 0.5, duration: 0.5 }}
             >
               <Link
-                href="/new-arrivals"
+                href="/collection"
                 className="inline-block bg-[#76ABAE] text-[#222831] px-8 py-3 rounded-full text-lg font-semibold hover:bg-[#76ABAE]/80 transition duration-300"
               >
                 View All New Arrivals

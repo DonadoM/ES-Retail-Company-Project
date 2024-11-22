@@ -14,7 +14,7 @@ import { useState, useEffect, useRef } from "react";
 import { colors } from "../../lib/colors";
 import { MovingBackground } from "./MovingBackground";
 import { Navigation } from "./Navigation";
-import { MobileMenu } from "./MobileMenu";
+// import { MobileMenu } from "./MobileMenu";
 import { DarkModeToggle } from "./DarkModeToggle";
 import { FeatureCard } from "./FeaturedCard";
 
@@ -127,8 +127,8 @@ export default function Landing() {
               4F WEARS
             </Link>
           </motion.div>
-          <Navigation />
-          <MobileMenu />
+          {/* <Navigation /> */}
+          {/* <MobileMenu /> */}
         </nav>
       </header>
 
@@ -362,7 +362,7 @@ export default function Landing() {
                   (item) => (
                     <li key={item}>
                       <Link
-                        href="#"
+                        href="/pages/store"
                         className="text-sm text-gray-400 hover:text-accent transition-colors"
                       >
                         {item}

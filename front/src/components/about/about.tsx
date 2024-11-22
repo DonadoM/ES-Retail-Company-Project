@@ -29,7 +29,7 @@ const MovingBackground = () => {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-0 overflow-hidden">
+    <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
       <motion.div
         className="absolute inset-0 opacity-20"
         style={{
@@ -58,7 +58,10 @@ const MovingBackground = () => {
   );
 };
 
-const ParallaxImage: React.FC<{ src: string; alt: string }> = ({}) => {
+const ParallaxImage: React.FC<{ src: string; alt: string }> = ({
+  src,
+  alt,
+}) => {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -73,7 +76,7 @@ const ParallaxImage: React.FC<{ src: string; alt: string }> = ({}) => {
       style={{ y, scale }}
       className="relative w-full h-64 md:h-96 overflow-hidden rounded-lg"
     >
-      <Image src="/fondo.jpg" alt="fondo" layout="fill" objectFit="cover" />
+      <Image src={src} alt={alt} layout="fill" objectFit="cover" />
     </motion.div>
   );
 };
@@ -192,17 +195,17 @@ export default function AboutUs() {
 
   return (
     <div
-      className="relative min-h-screen text-white overflow-hidden"
+      className="relative min-h-screen text-white"
       style={{ backgroundColor: colors.background }}
     >
       <MovingBackground />
 
       <motion.div
-        className="fixed top-0 left-0 right-0 h-1 origin-left z-50"
+        className="fixed top-0 left-0 right-0 h-1 origin-left z-30"
         style={{ scaleX, backgroundColor: colors.accent }}
       />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 py-20">
+      <div className="relative z-10 pt-16 max-w-6xl mx-auto px-4 pb-20">
         <AnimatePresence>
           <motion.h1
             initial={{ opacity: 0, y: -50 }}
@@ -212,7 +215,7 @@ export default function AboutUs() {
             className="text-5xl font-bold mb-8 text-center"
             style={{ color: colors.text }}
           >
-            Somos Vogue Verse
+            Somos 4F WEARS
           </motion.h1>
         </AnimatePresence>
 
@@ -226,7 +229,7 @@ export default function AboutUs() {
                 Nuestra Visión
               </h2>
               <p className="text-lg" style={{ color: colors.text }}>
-                En VogueVerse, combinamos alta costura con tecnología de
+                En 4f Wears, combinamos alta costura con tecnología de
                 vanguardia para crear prendas que van más allá de la moda. Cada
                 pieza es una obra maestra de diseño y funcionalidad, concebida
                 para el consumidor moderno que valora la calidad, el estilo
@@ -234,10 +237,7 @@ export default function AboutUs() {
               </p>
             </div>
             <FloatingElement>
-              <ParallaxImage
-                src="/placeholder.svg?height=400&width=600"
-                alt="Diseño de moda innovador"
-              />
+              <ParallaxImage src="/fondo.jpg" alt="Diseño de moda innovador" />
             </FloatingElement>
           </div>
         </AnimatedText>
@@ -313,7 +313,7 @@ export default function AboutUs() {
               Tu Estilo, Nuestro Compromiso
             </h2>
             <p className="text-lg mb-8" style={{ color: colors.text }}>
-              En VogueVerse, no solo vendemos ropa; creamos una experiencia de
+              En 4F Wears, no solo vendemos ropa; creamos una experiencia de
               moda personalizada que refleja tu estilo único y valores. Únete a
               nosotros en esta revolución de la moda.
             </p>

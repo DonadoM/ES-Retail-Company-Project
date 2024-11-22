@@ -1,17 +1,16 @@
-// routes/inventoryRoutes.ts
-import express, { Request, Response } from "express";
+import { Router } from "express";
 import {
-  createInventory,
-  getInventory,
-  updateInventory,
-  deleteInventory,
+  getInventoryItems,
+  createInventoryItem,
+  updateInventoryItem,
+  deleteInventoryItem,
 } from "../controllers/inventoryController";
 
-const router = express.Router();
+const router = Router();
 
-router.post("/", createInventory);
-router.get("/", getInventory);
-router.put("/:id", updateInventory);
-router.delete("/:id", deleteInventory);
+router.get("/", getInventoryItems);
+router.post("/", createInventoryItem);
+router.put("/:id", updateInventoryItem);
+router.delete("/:id", deleteInventoryItem);
 
 export default router;

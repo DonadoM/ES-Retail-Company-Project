@@ -1,125 +1,179 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+"use client"
+
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { AlertCircle } from 'lucide-react'
+import { AlertCircle, Upload } from 'lucide-react'
+
+const colors = {
+  background: "#31363F",
+  text: "#EEEEEE",
+  accent: "#76ABAE",
+};
+
+interface ProductFormData {
+  name: string
+  description: string
+  price: number
+  category: string
+  stock: number
+  image: FileList
+}
 
 interface ProductFormProps {
-  onSubmit: (data: FormData) => Promise<void>;
-  initialData?: {
-    _id?: string;
-    name: string;
-    description: string;
-    price: number;
-    category: string;
-    stock: number;
-    imageUrl?: string;
-  };
+  onSubmit: (formData: FormData) => Promise<void>
+  initialData?: Partial<ProductFormData>
 }
 
 export function ProductForm({ onSubmit, initialData }: ProductFormProps) {
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const { register, handleSubmit, formState: { errors } } = useForm<ProductFormData>({
     defaultValues: initialData
-  });
-  const [imagePreview, setImagePreview] = useState<string | null>(initialData?.imageUrl || null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  })
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
 
-  const onSubmitForm = async (data: any) => {
-    setIsLoading(true);
-    setError(null);
-    const formData = new FormData();
-    Object.keys(data).forEach(key => {
-      if (key === 'image') {
-        if (data.image[0]) {
-          formData.append('image', data.image[0]);
-        }
+  const handleFormSubmit = async (data: ProductFormData) => {
+    setIsLoading(true)
+    setError(null)
+    setSuccess(false)
+
+    const formData = new FormData()
+    Object.entries(data).forEach(([key, value]) => {
+      if (key === 'image' && value[0]) {
+        formData.append(key, value[0])
       } else {
-        formData.append(key, data[key]);
+        formData.append(key, String(value))
       }
-    });
+    })
 
     try {
-      await onSubmit(formData);
-    } catch (error) {
-      setError('Error al guardar el producto. Por favor, inténtalo de nuevo.');
+      await onSubmit(formData)
+      setSuccess(true)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Ocurrió un error desconocido')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  }
 
   return (
-    <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4">
-      <div>
-        <Label htmlFor="name">Nombre del producto</Label>
-        <Input id="name" {...register('name', { required: 'Este campo es obligatorio' })} />
-        {errors.name && <p className="text-red-500">{errors.name.message}</p>}
-      </div>
+    <Card className="w-full max-w-2xl mx-auto" style={{ backgroundColor: colors.background }}>
+      <CardHeader className="bg-opacity-10" style={{ backgroundColor: colors.accent }}>
+        <CardTitle className="text-2xl font-bold" style={{ color: colors.text }}>
+          {initialData ? 'Editar Producto' : 'Crear Nuevo Producto'}
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="p-6">
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="name" style={{ color: colors.text }}>Nombre del producto</Label>
+            <Input 
+              id="name" 
+              {...register('name', { required: 'Este campo es obligatorio' })}
+              className="border-opacity-50 focus:border-opacity-100"
+              style={{ borderColor: colors.accent, color: colors.text, backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
+            />
+            {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+          </div>
 
-      <div>
-        <Label htmlFor="description">Descripción</Label>
-        <Textarea id="description" {...register('description', { required: 'Este campo es obligatorio' })} />
-        {errors.description && <p className="text-red-500">{errors.description.message}</p>}
-      </div>
+          <div className="space-y-2">
+            <Label htmlFor="description" style={{ color: colors.text }}>Descripción</Label>
+            <Textarea 
+              id="description" 
+              {...register('description', { required: 'Este campo es obligatorio' })}
+              className="border-opacity-50 focus:border-opacity-100"
+              style={{ borderColor: colors.accent, color: colors.text, backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
+            />
+            {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
+          </div>
 
-      <div>
-        <Label htmlFor="price">Precio</Label>
-        <Input type="number" id="price" {...register('price', { required: 'Este campo es obligatorio', min: 0 })} />
-        {errors.price && <p className="text-red-500">{errors.price.message}</p>}
-      </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="price" style={{ color: colors.text }}>Precio</Label>
+              <Input 
+                type="number" 
+                id="price" 
+                {...register('price', { required: 'Este campo es obligatorio', min: 0 })}
+                className="border-opacity-50 focus:border-opacity-100"
+                style={{ borderColor: colors.accent, color: colors.text, backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
+              />
+              {errors.price && <p className="text-red-500 text-sm">{errors.price.message}</p>}
+            </div>
 
-      <div>
-        <Label htmlFor="category">Categoría</Label>
-        <Input id="category" {...register('category', { required: 'Este campo es obligatorio' })} />
-        {errors.category && <p className="text-red-500">{errors.category.message}</p>}
-      </div>
+            <div className="space-y-2">
+              <Label htmlFor="stock" style={{ color: colors.text }}>Stock</Label>
+              <Input 
+                type="number" 
+                id="stock" 
+                {...register('stock', { required: 'Este campo es obligatorio', min: 0 })}
+                className="border-opacity-50 focus:border-opacity-100"
+                style={{ borderColor: colors.accent, color: colors.text, backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
+              />
+              {errors.stock && <p className="text-red-500 text-sm">{errors.stock.message}</p>}
+            </div>
+          </div>
 
-      <div>
-        <Label htmlFor="stock">Stock</Label>
-        <Input type="number" id="stock" {...register('stock', { required: 'Este campo es obligatorio', min: 0 })} />
-        {errors.stock && <p className="text-red-500">{errors.stock.message}</p>}
-      </div>
+          <div className="space-y-2">
+            <Label htmlFor="category" style={{ color: colors.text }}>Categoría</Label>
+            <Input 
+              id="category" 
+              {...register('category', { required: 'Este campo es obligatorio' })}
+              className="border-opacity-50 focus:border-opacity-100"
+              style={{ borderColor: colors.accent, color: colors.text, backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
+            />
+            {errors.category && <p className="text-red-500 text-sm">{errors.category.message}</p>}
+          </div>
 
-      <div>
-        <Label htmlFor="image">Imagen del producto</Label>
-        <Input 
-          type="file" 
-          id="image" 
-          accept="image/*" 
-          {...register('image', { required: !initialData?.imageUrl })} 
-          onChange={handleImageChange} 
-        />
-        {imagePreview && (
-          <img src={imagePreview} alt="Vista previa" className="mt-2 max-w-xs" />
-        )}
-      </div>
+          <div className="space-y-2">
+            <Label htmlFor="image" style={{ color: colors.text }}>Imagen del producto</Label>
+            <div className="flex items-center space-x-2">
+              <Input 
+                type="file" 
+                id="image" 
+                accept="image/*" 
+                {...register('image', { required: initialData ? false : 'Este campo es obligatorio' })}
+                className="border-opacity-50 focus:border-opacity-100"
+                style={{ borderColor: colors.accent, color: colors.text, backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
+              />
+              <Upload className="text-gray-500" style={{ color: colors.accent }} />
+            </div>
+            {errors.image && <p className="text-red-500 text-sm">{errors.image.message}</p>}
+          </div>
 
-      {error && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
+          {error && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
 
-      <Button type="submit" disabled={isLoading}>
-        {isLoading ? 'Guardando...' : (initialData?._id ? 'Actualizar Producto' : 'Crear Producto')}
-      </Button>
-    </form>
-  );
+          {success && (
+            <Alert variant="default" style={{ backgroundColor: 'rgba(118, 171, 174, 0.2)', borderColor: colors.accent }}>
+              <AlertTitle style={{ color: colors.accent }}>Éxito</AlertTitle>
+              <AlertDescription style={{ color: colors.text }}>
+                El producto se ha {initialData ? 'actualizado' : 'creado'} correctamente.
+              </AlertDescription>
+            </Alert>
+          )}
+
+          <Button 
+            type="submit" 
+            disabled={isLoading}
+            className="w-full font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105"
+            style={{ backgroundColor: colors.accent, color: colors.background }}
+          >
+            {isLoading ? 'Procesando...' : (initialData ? 'Actualizar Producto' : 'Crear Producto')}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
+  )
 }
 

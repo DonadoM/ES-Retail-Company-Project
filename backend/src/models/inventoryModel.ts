@@ -1,31 +1,18 @@
-// src/models/inventoryModel.ts
-import mongoose, { Document, Schema, Model } from 'mongoose';
+import mongoose, { Document, Schema } from "mongoose";
 
-interface IInventory extends Document {
-  productId: string;
+interface IInventoryItem extends Document {
+  productName: string;
+  sku: string;
   quantity: number;
-  location?: string; // Opcional: ubicación de inventario si se requiere
+  price: number;
 }
 
-const inventorySchema: Schema = new Schema({
-  productId: { 
-    type: String, 
-    required: true,
-    trim: true // Remueve espacios innecesarios
-  },
-  quantity: { 
-    type: Number, 
-    required: true, 
-    min: 0 // Asegura que la cantidad sea no negativa
-  },
-  location: { 
-    type: String, 
-    default: "warehouse", // Ubicación predeterminada
-    trim: true
-  }
-}, { 
-  timestamps: true // Agrega `createdAt` y `updatedAt`
+const inventoryItemSchema: Schema = new Schema({
+  productName: { type: String, required: true },
+  sku: { type: String, required: true, unique: true },
+  quantity: { type: Number, required: true },
+  price: { type: Number, required: true },
 });
 
-const Inventory: Model<IInventory> = mongoose.model<IInventory>('Inventory', inventorySchema);
-export default Inventory;
+const InventoryItem = mongoose.model<IInventoryItem>("InventoryItem", inventoryItemSchema);
+export default InventoryItem;
