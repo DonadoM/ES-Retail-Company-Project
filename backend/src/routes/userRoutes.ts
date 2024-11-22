@@ -1,15 +1,29 @@
-// import { Router } from "express";
-// import { registerUser, loginUser, getUsers, updateUser, deleteUser } from "../controllers/userController";
-// // import { protect, admin } from "../middlewares/authMiddleware";
+import express from 'express';
+import {
+  authUser,
+  registerUser,
+  getUserProfile,
+  updateUserProfile,
+  getUsers,
+  deleteUser,
+  getUserById,
+  updateUser,
+} from '../controllers/userController';
+import { protect, admin } from '../middlewares/authMiddleware';
 
-// const router = Router();
+const router = express.Router();
 
-// router.post("/register", registerUser);
-// router.post("/login", loginUser);
+router.route('/').post(registerUser).get(protect, admin, getUsers);
+router.post('/login', authUser);
+router
+  .route('/profile')
+  .get(protect, getUserProfile)
+  .put(protect, updateUserProfile);
+router
+  .route('/:id')
+  .delete(protect, admin, deleteUser)
+  .get(protect, admin, getUserById)
+  .put(protect, admin, updateUser);
 
-// // Rutas protegidas
-// router.get("/", protect, admin, getUsers);
-// router.put("/:id", protect, admin, updateUser);
-// router.delete("/:id", protect, admin, deleteUser);
+export default router;
 
-// export default router;

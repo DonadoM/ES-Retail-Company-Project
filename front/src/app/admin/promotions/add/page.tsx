@@ -23,7 +23,7 @@ export default function AddPromotionPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/promotions`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/promotions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

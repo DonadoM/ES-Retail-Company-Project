@@ -33,7 +33,7 @@ export default function EditPromotionPage({ params }: { params: { id: string } }
 
   const fetchPromotion = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/promotions/${params.id}`)
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/promotions/${params.id}`)
       if (!response.ok) {
         throw new Error('Failed to fetch promotion')
       }
@@ -52,7 +52,7 @@ export default function EditPromotionPage({ params }: { params: { id: string } }
     if (!promotion) return
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/promotions/${params.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/promotions/${params.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
