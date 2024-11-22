@@ -25,7 +25,6 @@ export default function CollectionPage() {
     fetch("https://backend-service-9xuv.onrender.com/api/products")
       .then((response) => response.json())
       .then((data) => {
-       
         const itemsWithImages = data.map((item: ClothingItemData) => ({
           ...item,
           imageUrl: item.imageUrl || "/placeholder.jpg"
@@ -52,7 +51,7 @@ export default function CollectionPage() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <Cart />
+      <Cart cartItems={cartItems} />
       <main className="container mx-auto px-4 py-12">
         <motion.h1
           initial={{ opacity: 0, y: -50 }}

@@ -1,23 +1,22 @@
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { ClothingItem } from "@/components/Clothing/ClothingItem";
-import { Cart } from "@/components/Cart";
-import { MovingBackground } from "@/components//Home/MovingBackground";
-
-import { colors } from "@/lib/colors";
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import ClothingItem from '../components/ClothingItem'; // Asegúrate de importar el componente correctamente
+import Cart from '../components/Cart'; // Asegúrate de importar el componente del carrito correctamente
 
 interface ClothingItemData {
   _id: string;
   name: string;
-  category: string;
-  price: number;
   description: string;
+  price: number;
+  category: string;
   stock: number;
+  imageUrl: string;
 }
 
-export default function PageSingle() {
+export default function Compra() {
   const [items, setItems] = useState<ClothingItemData[]>([]);
-  const [filter, setFilter] = useState<string>("Todos");
+  const [filter, setFilter] = useState<string>('Todos');
+  const [cartItems, setCartItems] = useState<ClothingItemData[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -40,24 +39,16 @@ export default function PageSingle() {
       ? items
       : items.filter((item) => item.category === filter);
 
+  const addToCart = (item: ClothingItemData) => {
+    setCartItems((prevItems) => [...prevItems, item]);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <MovingBackground />
-      <Cart />
-
-      <main className="container mx-auto px-4 py-12 relative z-10">
-        <motion.h1
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-4xl font-bold text-center mb-8"
-          style={{ color: colors.accent }}
-        >
-          Nuestra Colección
-        </motion.h1>
-
+    <div className="min-h-screen bg-gray-100">
+      <Cart cartItems={cartItems} />
+      <main className="container mx-auto px-4 py-12">
         {loading ? (
-          <div className="text-center">Cargando...</div>
+          <div className="text-center">Cargando productos...</div>
         ) : (
           <>
             <div className="flex justify-center mb-8 space-x-4 flex-wrap">
@@ -68,26 +59,14 @@ export default function PageSingle() {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setFilter(category)}
                   className={`px-4 py-2 rounded-full font-semibold m-2 ${
-                    filter === category
-                      ? "bg-accent text-gray-900"
-                      : "bg-gray-700 text-white"
+                    filter === category ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
                   }`}
-                  style={{
-                    backgroundColor:
-                      filter === category ? colors.accent : undefined,
-                  }}
                 >
                   {category}
                 </motion.button>
               ))}
             </div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
-            >
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {filteredItems.map((item) => (
                 <motion.div
                   key={item._id}
@@ -95,12 +74,13 @@ export default function PageSingle() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <ClothingItem imageUrl={""} onAddToCart={function (item: ClothingItemData): void {
-                    throw new Error("Function not implemented.");
-                  } } {...item} />
+                  <ClothingItem
+                    {...item}
+                    onAddToCart={addToCart}
+                  />
                 </motion.div>
               ))}
-            </motion.div>
+            </div>
           </>
         )}
       </main>
