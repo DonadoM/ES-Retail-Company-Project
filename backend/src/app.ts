@@ -10,7 +10,7 @@ import orderRoutes from "./routes/orderRoutes";
 import inventoryRoutes from "./routes/inventoryRoutes";
 import supplyChainRoutes from "./routes/supplyChainRoutes";
 import promotionRoutes from "./routes/promotionRoutes";
-import userRoutes from "./routes/userRoutes";
+// import userRoutes from "./routes/userRoutes";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import cloudinary from "cloudinary";
 
@@ -54,4 +54,4 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/inventory", inventoryRoutes);
 app.use("/api/supply-chain", supplyChainRoutes);
 app.use("/api/promotions", promotionRoutes);
-app.use("/api/users", userRoutes);
+// app.use("/api/users", userRoutes);
