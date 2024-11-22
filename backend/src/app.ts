@@ -11,8 +11,8 @@ import inventoryRoutes from "./routes/inventoryRoutes";
 import supplyChainRoutes from "./routes/supplyChainRoutes";
 import promotionRoutes from "./routes/promotionRoutes";
 // import userRoutes from "./routes/userRoutes";
-import uploadRoutes from './routes/uploadRoutes.js';
-import cloudinary from 'cloudinary';
+import uploadRoutes from "./routes/uploadRoutes.js";
+import cloudinary from "cloudinary";
 
 dotenv.config();
 
@@ -21,7 +21,6 @@ export const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
-
 
 // Cloudinary configuration
 cloudinary.v2.config({
@@ -47,7 +46,7 @@ const connectDB = async () => {
 connectDB();
 
 // Rutas
-app.use('/api', uploadRoutes);
+app.use("/api", uploadRoutes);
 app.use("/api/customers", customerRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
