@@ -1,24 +1,14 @@
-import { Router } from "express";
-import {
-  createProduct,
-  deleteProduct,
-  getProducts,
-  updateProduct,
-  upload,
-} from "../controllers/productController";
+import express from 'express';
+import multer from 'multer';
+import { createProduct, getProducts, updateProduct, deleteProduct } from '../controllers/productController.js';
 
-const router = Router();
+const router = express.Router();
+const upload = multer();
 
-// Ruta para obtener todos los productos
-router.get("/", getProducts);
-
-// Ruta para crear un nuevo producto
-router.post("/", upload.single('image'), createProduct);
-
-// Ruta para actualizar un producto por su ID
-router.put("/:id", upload.single('image'), updateProduct);
-
-// Ruta para eliminar un producto por su ID
-router.delete("/:id", deleteProduct);
+router.post('/', upload.none(), createProduct);
+router.get('/', getProducts);
+router.put('/:id', upload.none(), updateProduct);
+router.delete('/:id', deleteProduct);
 
 export default router;
+
