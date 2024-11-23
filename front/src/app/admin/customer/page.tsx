@@ -6,7 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, User, Mail, Phone, MapPin, Edit, Trash2 } from 'lucide-react';
+import {
+  AlertCircle,
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Edit,
+  Trash2,
+} from "lucide-react";
 
 const colors = {
   background: "#31363F",
@@ -156,35 +164,63 @@ export default function AdminCustomersPage() {
 
       <Card className="mb-8" style={{ backgroundColor: colors.background }}>
         <CardHeader>
-          <CardTitle style={{ color: colors.accent }}>Add New Customer</CardTitle>
+          <CardTitle style={{ color: colors.accent }}>
+            Add New Customer
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <Input
               placeholder="Name"
               value={newCustomer.name || ""}
-              onChange={(e) => setNewCustomer({ ...newCustomer, name: e.target.value })}
-              style={{ backgroundColor: "rgba(255, 255, 255, 0.1)", color: colors.text }}
+              onChange={(e) =>
+                setNewCustomer({ ...newCustomer, name: e.target.value })
+              }
+              style={{
+                backgroundColor: "rgba(255, 255, 255, 0.1)",
+                color: colors.text,
+              }}
             />
             <Input
               placeholder="Email"
               value={newCustomer.email || ""}
-              onChange={(e) => setNewCustomer({ ...newCustomer, email: e.target.value })}
-              style={{ backgroundColor: "rgba(255, 255, 255, 0.1)", color: colors.text }}
+              onChange={(e) =>
+                setNewCustomer({ ...newCustomer, email: e.target.value })
+              }
+              style={{
+                backgroundColor: "rgba(255, 255, 255, 0.1)",
+                color: colors.text,
+              }}
             />
             <Input
               placeholder="Address"
               value={newCustomer.address || ""}
-              onChange={(e) => setNewCustomer({ ...newCustomer, address: e.target.value })}
-              style={{ backgroundColor: "rgba(255, 255, 255, 0.1)", color: colors.text }}
+              onChange={(e) =>
+                setNewCustomer({ ...newCustomer, address: e.target.value })
+              }
+              style={{
+                backgroundColor: "rgba(255, 255, 255, 0.1)",
+                color: colors.text,
+              }}
             />
             <Input
               placeholder="Phone"
               value={newCustomer.phone || ""}
-              onChange={(e) => setNewCustomer({ ...newCustomer, phone: e.target.value })}
-              style={{ backgroundColor: "rgba(255, 255, 255, 0.1)", color: colors.text }}
+              onChange={(e) =>
+                setNewCustomer({ ...newCustomer, phone: e.target.value })
+              }
+              style={{
+                backgroundColor: "rgba(255, 255, 255, 0.1)",
+                color: colors.text,
+              }}
             />
-            <Button onClick={handleCreate} style={{ backgroundColor: colors.accent, color: colors.background }}>
+            <Button
+              onClick={handleCreate}
+              style={{
+                backgroundColor: colors.accent,
+                color: colors.background,
+              }}
+            >
               Add Customer
             </Button>
           </div>
@@ -219,25 +255,63 @@ export default function AdminCustomersPage() {
                     <div className="space-y-2">
                       <Input
                         value={editingCustomer.name}
-                        onChange={(e) => setEditingCustomer({ ...editingCustomer, name: e.target.value })}
-                        style={{ backgroundColor: "rgba(255, 255, 255, 0.1)", color: colors.text }}
+                        onChange={(e) =>
+                          setEditingCustomer({
+                            ...editingCustomer,
+                            name: e.target.value,
+                          })
+                        }
+                        style={{
+                          backgroundColor: "rgba(255, 255, 255, 0.1)",
+                          color: colors.text,
+                        }}
                       />
                       <Input
                         value={editingCustomer.email}
-                        onChange={(e) => setEditingCustomer({ ...editingCustomer, email: e.target.value })}
-                        style={{ backgroundColor: "rgba(255, 255, 255, 0.1)", color: colors.text }}
+                        onChange={(e) =>
+                          setEditingCustomer({
+                            ...editingCustomer,
+                            email: e.target.value,
+                          })
+                        }
+                        style={{
+                          backgroundColor: "rgba(255, 255, 255, 0.1)",
+                          color: colors.text,
+                        }}
                       />
                       <Input
                         value={editingCustomer.address || ""}
-                        onChange={(e) => setEditingCustomer({ ...editingCustomer, address: e.target.value })}
-                        style={{ backgroundColor: "rgba(255, 255, 255, 0.1)", color: colors.text }}
+                        onChange={(e) =>
+                          setEditingCustomer({
+                            ...editingCustomer,
+                            address: e.target.value,
+                          })
+                        }
+                        style={{
+                          backgroundColor: "rgba(255, 255, 255, 0.1)",
+                          color: colors.text,
+                        }}
                       />
                       <Input
                         value={editingCustomer.phone || ""}
-                        onChange={(e) => setEditingCustomer({ ...editingCustomer, phone: e.target.value })}
-                        style={{ backgroundColor: "rgba(255, 255, 255, 0.1)", color: colors.text }}
+                        onChange={(e) =>
+                          setEditingCustomer({
+                            ...editingCustomer,
+                            phone: e.target.value,
+                          })
+                        }
+                        style={{
+                          backgroundColor: "rgba(255, 255, 255, 0.1)",
+                          color: colors.text,
+                        }}
                       />
-                      <Button onClick={handleUpdate} style={{ backgroundColor: colors.accent, color: colors.background }}>
+                      <Button
+                        onClick={handleUpdate}
+                        style={{
+                          backgroundColor: colors.accent,
+                          color: colors.background,
+                        }}
+                      >
                         Save
                       </Button>
                     </div>
@@ -254,7 +328,11 @@ export default function AdminCustomersPage() {
                         className="text-sm flex items-center"
                         style={{ color: colors.text }}
                       >
-                        <Mail size={16} className="mr-2" style={{ color: colors.accent }} />
+                        <Mail
+                          size={16}
+                          className="mr-2"
+                          style={{ color: colors.accent }}
+                        />
                         {customer.email}
                       </p>
                       {customer.phone && (
@@ -262,7 +340,11 @@ export default function AdminCustomersPage() {
                           className="text-sm flex items-center"
                           style={{ color: colors.text }}
                         >
-                          <Phone size={16} className="mr-2" style={{ color: colors.accent }} />
+                          <Phone
+                            size={16}
+                            className="mr-2"
+                            style={{ color: colors.accent }}
+                          />
                           {customer.phone}
                         </p>
                       )}
@@ -271,7 +353,11 @@ export default function AdminCustomersPage() {
                           className="text-sm flex items-center"
                           style={{ color: colors.text }}
                         >
-                          <MapPin size={16} className="mr-2" style={{ color: colors.accent }} />
+                          <MapPin
+                            size={16}
+                            className="mr-2"
+                            style={{ color: colors.accent }}
+                          />
                           {customer.address}
                         </p>
                       )}
@@ -303,4 +389,3 @@ export default function AdminCustomersPage() {
     </div>
   );
 }
-

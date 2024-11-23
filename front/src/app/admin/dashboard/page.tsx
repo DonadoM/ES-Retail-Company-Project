@@ -1,21 +1,21 @@
 "use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { useState } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
 
 const sections = [
-  { name: 'Products', path: '/admin/products' },
-  { name: 'Customers', path: '/admin/customers' },
-  { name: 'Inventory', path: '/admin/inventory' },
-  { name: 'Orders', path: '/admin/orders' },
-  { name: 'Supply Chain', path: '/admin/supply-chain' },
-  { name: 'Promotions', path: '/admin/promotions' },
-  { name: 'Users', path: '/admin/users' },
+  { name: "Products", path: "/admin/products" },
+  { name: "Customers", path: "/admin/customers" },
+  { name: "Inventory", path: "/admin/inventory" },
+  { name: "Orders", path: "/admin/orders" },
+  { name: "Supply Chain", path: "/admin/supply-chain" },
+  { name: "Promotions", path: "/admin/promotions" },
+  { name: "Users", path: "/admin/users" },
 ];
 
 export default function AdminDashboard() {
-  const [activeSection, setActiveSection] = useState('');
+  const [activeSection, setActiveSection] = useState("");
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -24,7 +24,9 @@ export default function AdminDashboard() {
           <div className="flex justify-between h-16">
             <div className="flex">
               <div className="flex-shrink-0 flex items-center">
-                <h1 className="text-xl font-bold text-gray-800 dark:text-white">Admin Dashboard</h1>
+                <h1 className="text-xl font-bold text-gray-800 dark:text-white">
+                  Admin Dashboard
+                </h1>
               </div>
             </div>
             <div className="flex items-center">
@@ -54,7 +56,9 @@ export default function AdminDashboard() {
             className="border-4 border-dashed border-gray-200 dark:border-gray-700 rounded-lg h-96 flex items-center justify-center"
           >
             <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">
-              {activeSection ? `${activeSection} Dashboard` : 'Welcome to the Admin Dashboard'}
+              {activeSection
+                ? `${activeSection} Dashboard`
+                : "Welcome to the Admin Dashboard"}
             </h2>
           </motion.div>
         </div>
@@ -62,4 +66,3 @@ export default function AdminDashboard() {
     </div>
   );
 }
-
