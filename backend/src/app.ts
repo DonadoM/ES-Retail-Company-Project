@@ -5,11 +5,11 @@ import dotenv from "dotenv";
 import customerRoutes from "./routes/customerRoutes";
 import productRoutes from "./routes/productRoutes";
 import orderRoutes from "./routes/orderRoutes";
-// import authRoutes from "./routes/authRoutes";
 import inventoryRoutes from "./routes/inventoryRoutes";
 import supplyChainRoutes from "./routes/supplyChainRoutes";
 import promotionRoutes from "./routes/promotionRoutes";
-// import userRoutes from "./routes/userRoutes";
+import userRoutes from "./routes/userRoutes";
+import adminRoutes from "./routes/adminRoutes"; // Importar las rutas de admin
 import uploadRoutes from "./routes/uploadRoutes";
 import cloudinary from "cloudinary";
 
@@ -49,11 +49,11 @@ app.use("/api", uploadRoutes);
 app.use("/api/customers", customerRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
-// app.use("/api/auth", authRoutes);
 app.use("/api/inventory", inventoryRoutes);
 app.use("/api/supply-chain", supplyChainRoutes);
 app.use("/api/promotions", promotionRoutes);
-// app.use("/api/users", userRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/admin", adminRoutes); // Usar las rutas de admin
 
 // Ruta principal para la vista de bienvenida
 app.get("/", (req, res) => {
@@ -67,40 +67,24 @@ app.get("/", (req, res) => {
             background-color: #f8f9fa;
             color: #343a40;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
           }
           h1 {
-            color: #007bff;
-            text-align: center;
-            margin-bottom: 20px;
+            font-size: 24px;
           }
           p {
             font-size: 18px;
-            text-align: center;
-            margin-bottom: 30px;
-          }
-          .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
           }
           ul {
-            list-style-type: none;
+            list-style: none;
             padding: 0;
           }
           li {
-            padding: 15px;
-            border-bottom: 1px solid #e9ecef;
-            transition: background-color 0.3s;
-          }
-          li:last-child {
-            border-bottom: none;
-          }
-          li:hover {
-            background-color: #e9ecef;
+            margin-bottom: 10px;
           }
           a {
             text-decoration: none;
@@ -135,6 +119,8 @@ app.get("/", (req, res) => {
             <li><a href="/api/orders">/api/orders</a> - Gestión de pedidos</li>
             <li><a href="/api/inventory">/api/inventory</a> - Gestión de inventario</li>
             <li><a href="/api/supply-chain">/api/supply-chain</a> - Gestión de cadena de suministro</li>
+            <li><a href="/api/users">/api/users</a> - Gestión de usuarios</li>
+            <li><a href="/api/admin">/api/admin</a> - Gestión de administradores</li>
             <li><a href="/api/promotions">/api/promotions</a> - Gestión de promociones</li>
           </ul>
           <footer>

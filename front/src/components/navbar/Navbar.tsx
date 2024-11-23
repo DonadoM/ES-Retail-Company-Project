@@ -96,6 +96,9 @@ export default function Navbar() {
             <NavLink href="/pages/profile" icon={User}>
               Perfil
             </NavLink>
+            <NavLink href="/admin/dashboard" icon={User}>
+              Admin
+            </NavLink>
           </div>
           <div className="flex items-center space-x-4 ">
             <button
