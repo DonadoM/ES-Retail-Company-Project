@@ -1,12 +1,13 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { motion, AnimatePresence } from "framer-motion"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { useMediaQuery } from "@/components/Hooks/use-media-query"
-import { cn } from "@/lib/utils"
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useMediaQuery } from "@/components/Hooks/use-media-query";
+import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 const sections = [
   { name: "Products", path: "/admin/products" },
@@ -16,19 +17,20 @@ const sections = [
   { name: "Supply Chain", path: "/admin/supply-chain" },
   { name: "Promotions", path: "/admin/promotions" },
   { name: "Users", path: "/admin/users" },
-]
-
+];
 
 export default function AdminDashboard() {
-  const [activeSection, setActiveSection] = useState("")
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const isMobile = useMediaQuery("(max-width: 768px)")
+  const [activeSection, setActiveSection] = useState("");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  const router = useRouter();
 
+  const handleClick = (path: string) => {
+    router.push(path);
+  };
 
   return (
     <div className="min-h-screen bg-[#1a1f2b]">
-     
-
       {/* Secondary Navigation */}
       <div className="bg-[#1F2937] border-t border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -73,8 +75,8 @@ export default function AdminDashboard() {
                       : "text-gray-300 hover:text-white hover:bg-gray-700"
                   )}
                   onClick={() => {
-                    setActiveSection(section.name)
-                    setIsMobileMenuOpen(false)
+                    setActiveSection(section.name);
+                    setIsMobileMenuOpen(false);
                   }}
                 >
                   {section.name}
@@ -96,10 +98,10 @@ export default function AdminDashboard() {
             className="rounded-lg h-96 flex flex-col items-center justify-center bg-[#374151]"
           >
             <Image
-              src="/placeholder.svg?height=100&width=100"
+              src="/admin.svg"
               alt="Admin Dashboard Icon"
-              width={100}
-              height={100}
+              width={200}
+              height={200}
               className="mb-4"
             />
             <h2 className="text-3xl font-bold text-white text-center px-4">
@@ -116,9 +118,12 @@ export default function AdminDashboard() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="p-6 rounded-lg shadow-lg cursor-pointer bg-[#374151] hover:bg-[#4B5563] transition-colors duration-200"
-              onClick={() => setActiveSection(section.name)}
+              // onClick={() => setActiveSection(section.name)}
+              onClick={() => handleClick(section.path)}
             >
-              <h3 className="text-xl font-semibold text-white mb-2">{section.name}</h3>
+              <h3 className="text-xl font-semibold text-white mb-2">
+                {section.name}
+              </h3>
               <p className="text-gray-300">
                 Manage your {section.name.toLowerCase()} here.
               </p>
@@ -127,6 +132,5 @@ export default function AdminDashboard() {
         </div>
       </main>
     </div>
-  )
+  );
 }
-

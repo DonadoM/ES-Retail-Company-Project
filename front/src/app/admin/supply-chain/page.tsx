@@ -75,63 +75,68 @@ export default function SupplyChainPage() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="container mx-auto py-10">
-      <h1 className="text-2xl font-bold mb-5">Supply Chain Management</h1>
+    <div className="container mx-auto py-10 px-5">
+      <h1 className="text-3xl font-bold mb-5 text-center text-blue-600">
+        Supply Chain Management
+      </h1>
       <Button
         onClick={() => router.push("/admin/supply-chain/add")}
-        className="mb-5"
+        className="mb-5 bg-blue-600 text-white hover:bg-blue-700 transition duration-200"
       >
         Add New Item
       </Button>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Item Name</TableHead>
-            <TableHead>SKU</TableHead>
-            <TableHead>Quantity</TableHead>
-            <TableHead>Supplier</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Expected Delivery</TableHead>
-            <TableHead>Actual Delivery</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {items.map((item) => (
-            <TableRow key={item._id}>
-              <TableCell>{item.itemName}</TableCell>
-              <TableCell>{item.sku}</TableCell>
-              <TableCell>{item.quantity}</TableCell>
-              <TableCell>{item.supplier}</TableCell>
-              <TableCell>{item.status}</TableCell>
-              <TableCell>
-                {new Date(item.expectedDeliveryDate).toLocaleDateString()}
-              </TableCell>
-              <TableCell>
-                {item.actualDeliveryDate
-                  ? new Date(item.actualDeliveryDate).toLocaleDateString()
-                  : "N/A"}
-              </TableCell>
-              <TableCell>
-                <Button
-                  onClick={() =>
-                    router.push(`/admin/supply-chain/edit/${item._id}`)
-                  }
-                  className="mr-2"
-                >
-                  Edit
-                </Button>
-                <Button
-                  onClick={() => handleDelete(item._id)}
-                  variant="destructive"
-                >
-                  Delete
-                </Button>
-              </TableCell>
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Item Name</TableHead>
+              <TableHead>SKU</TableHead>
+              <TableHead>Quantity</TableHead>
+              <TableHead>Supplier</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Expected Delivery</TableHead>
+              <TableHead>Actual Delivery</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {items.map((item) => (
+              <TableRow key={item._id}>
+                <TableCell>{item.itemName}</TableCell>
+                <TableCell>{item.sku}</TableCell>
+                <TableCell>{item.quantity}</TableCell>
+                <TableCell>{item.supplier}</TableCell>
+                <TableCell>{item.status}</TableCell>
+                <TableCell>
+                  {new Date(item.expectedDeliveryDate).toLocaleDateString()}
+                </TableCell>
+                <TableCell>
+                  {item.actualDeliveryDate
+                    ? new Date(item.actualDeliveryDate).toLocaleDateString()
+                    : "N/A"}
+                </TableCell>
+                <TableCell>
+                  <Button
+                    onClick={() =>
+                      router.push(`/admin/supply-chain/edit/${item._id}`)
+                    }
+                    className="mr-2 bg-green-600 text-white hover:bg-green-700 transition duration-200"
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    onClick={() => handleDelete(item._id)}
+                    variant="destructive"
+                    className="bg-red-600 text-white hover:bg-red-700 transition duration-200"
+                  >
+                    Delete
+                  </Button>
+                </TableCell>
+ </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
