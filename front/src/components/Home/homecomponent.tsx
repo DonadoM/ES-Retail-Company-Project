@@ -16,7 +16,7 @@ import { FeatureCard } from "./FeaturedCard";
 
 const AnimatedText: React.FC<{ children: React.ReactNode; delay?: number }> = ({
   children,
-  delay = 0,
+  delay = 2,
 }) => {
   const controls = useAnimation();
   const ref = useRef(null);
@@ -123,8 +123,6 @@ export default function Landing() {
               4F WEARS
             </Link>
           </motion.div>
-          {/* <Navigation /> */}
-          {/* <MobileMenu /> */}
         </nav>
       </header>
 

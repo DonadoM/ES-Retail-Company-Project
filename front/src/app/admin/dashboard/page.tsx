@@ -1,9 +1,13 @@
 "use client";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { motion } from "framer-motion";
+
+import { useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useMediaQuery } from "@/components/Hooks/use-media-query";
+import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 const sections = [
   { name: "Products", path: "/admin/products" },
@@ -15,30 +19,78 @@ const sections = [
   { name: "Users", path: "/admin/users" },
 ];
 
-export default function AdminDashboardPage() {
-  const { data: session, status } = useSession();
+export default function AdminDashboard() {
+  const [activeSection, setActiveSection] = useState("");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const router = useRouter();
-
-  useEffect(() => {
-    if (status === "loading") return; // Do nothing while loading
-    if (status === "unauthenticated" || !session?.user?.isAdmin) {
-      router.push("/login"); // Redirect to login if not authenticated or not an admin
-    }
-  }, [session, status, router]);
 
   const handleClick = (path: string) => {
     router.push(path);
   };
 
-  if (status === "loading") {
-    return <div>Loading...</div>;
-  }
-
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-[#1a1f2b]">
+      {/* Secondary Navigation */}
+      <div className="bg-[#1F2937] border-t border-gray-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center space-x-8 h-12 overflow-x-auto">
+            {sections.map((section) => (
+              <Link
+                key={section.name}
+                href={section.path}
+                className={cn(
+                  "text-sm whitespace-nowrap",
+                  activeSection === section.name
+                    ? "text-white"
+                    : "text-gray-300 hover:text-white"
+                )}
+                onClick={() => setActiveSection(section.name)}
+              >
+                {section.name}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {isMobile && isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="bg-[#1F2937] shadow-md"
+          >
+            <ScrollArea className="h-[calc(100vh-4rem)]">
+              {sections.map((section) => (
+                <Link
+                  key={section.name}
+                  href={section.path}
+                  className={cn(
+                    "block px-4 py-2 text-sm font-medium transition-colors duration-200",
+                    activeSection === section.name
+                      ? "text-white bg-gray-700"
+                      : "text-gray-300 hover:text-white hover:bg-gray-700"
+                  )}
+                  onClick={() => {
+                    setActiveSection(section.name);
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  {section.name}
+                </Link>
+              ))}
+            </ScrollArea>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <motion.div
+            key={activeSection}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -53,7 +105,9 @@ export default function AdminDashboardPage() {
               className="mb-4"
             />
             <h2 className="text-3xl font-bold text-white text-center px-4">
-              Welcome to the Admin Dashboard
+              {activeSection
+                ? `${activeSection} Dashboard`
+                : "Welcome to the Admin Dashboard"}
             </h2>
           </motion.div>
         </div>
@@ -64,6 +118,7 @@ export default function AdminDashboardPage() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="p-6 rounded-lg shadow-lg cursor-pointer bg-[#374151] hover:bg-[#4B5563] transition-colors duration-200"
+              // onClick={() => setActiveSection(section.name)}
               onClick={() => handleClick(section.path)}
             >
               <h3 className="text-xl font-semibold text-white mb-2">
