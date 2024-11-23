@@ -4,8 +4,6 @@ import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X, Home, ShoppingBag, Info, User } from 'lucide-react'
-import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useMediaQuery } from "@/components/Hooks/use-media-query"
 import { cn } from "@/lib/utils"
@@ -26,7 +24,6 @@ export default function AdminDashboard() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const isMobile = useMediaQuery("(max-width: 768px)")
 
-  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen)
 
   return (
     <div className="min-h-screen bg-[#1a1f2b]">
