@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import ClothingItem from '../components/ClothingItem'; // Asegúrate de importar el componente correctamente
-import Cart from '../components/Cart'; // Asegúrate de importar el componente del carrito correctamente
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { ClothingItem } from "@/components/Clothing/ClothingItem"; // Asegúrate de importar el componente correctamente
+import { Cart } from "@/components/Cart"; // Asegúrate de importar el componente del carrito correctamente
 
 interface ClothingItemData {
   _id: string;
@@ -15,7 +15,7 @@ interface ClothingItemData {
 
 export default function Compra() {
   const [items, setItems] = useState<ClothingItemData[]>([]);
-  const [filter, setFilter] = useState<string>('Todos');
+  const [filter, setFilter] = useState<string>("Todos");
   const [cartItems, setCartItems] = useState<ClothingItemData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -59,7 +59,9 @@ export default function Compra() {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setFilter(category)}
                   className={`px-4 py-2 rounded-full font-semibold m-2 ${
-                    filter === category ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+                    filter === category
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 text-gray-700"
                   }`}
                 >
                   {category}
@@ -74,10 +76,7 @@ export default function Compra() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <ClothingItem
-                    {...item}
-                    onAddToCart={addToCart}
-                  />
+                  <ClothingItem {...item} onAddToCart={addToCart} />
                 </motion.div>
               ))}
             </div>

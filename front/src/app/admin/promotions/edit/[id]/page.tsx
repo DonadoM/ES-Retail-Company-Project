@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -17,82 +17,84 @@ interface Promotion {
   startDate: string
   endDate: string
   isActive: boolean
-  minimumPurchaseAmount: number
-  usageLimit: number
 }
 
-export default function EditPromotionPage({ params }: { params: { id: string } }) {
+export default function EditPromotionPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const id = searchParams.get('id')
   const [promotion, setPromotion] = useState<Promotion | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const router = useRouter()
 
   useEffect(() => {
-    fetchPromotion()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const fetchPromotion = async () => {
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/promotions/${params.id}`)
-      if (!response.ok) {
-        throw new Error('Failed to fetch promotion')
-      }
-      const data = await response.json()
-      setPromotion(data)
-      setLoading(false)
-    } catch  {
-      setError('Failed to fetch promotion')
-      setLoading(false)
-      toast.error('Failed to fetch promotion')
+    if (id) {
+      fetch(`/api/promotions/${id}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setPromotion(data)
+          setLoading(false)
+        })
+        .catch((error) => {
+          console.error('Error fetching promotion:', error)
+          setError('Error fetching promotion')
+          setLoading(false)
+        })
     }
-  }
+  }, [id])
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSave = async () => {
     if (!promotion) return
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/promotions/${params.id}`, {
+      const response = await fetch(`/api/promotions/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(promotion),
       })
-      if (!response.ok) {
-        throw new Error('Failed to update promotion')
+
+      if (response.ok) {
+        toast.success('Promotion updated successfully')
+        router.push('/admin/promotions')
+      } else {
+        console.error('Error saving promotion:', response.statusText)
+        toast.error('Error saving promotion')
       }
-      toast.success('Promotion updated successfully')
-      router.push('/admin/promotions')
-    } catch {
-      toast.error('Failed to update promotion')
+    } catch (error) {
+      console.error('Error saving promotion:', error)
+      toast.error('Error saving promotion')
     }
   }
 
-  if (loading) return <div>Loading...</div>
-  if (error) return <div>Error: {error}</div>
-  if (!promotion) return <div>No promotion found</div>
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
+  if (error) {
+    return <div>{error}</div>
+  }
 
   return (
-    <div className="container mx-auto py-10">
-      <h1 className="text-2xl font-bold mb-5">Edit Promotion</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div>
+      <h1>Edit Promotion</h1>
+      <form onSubmit={(e) => { e.preventDefault(); handleSave(); }}>
         <Input
-          placeholder="Promotion Code"
-          value={promotion.code}
-          onChange={(e) => setPromotion({ ...promotion, code: e.target.value })}
+          placeholder="Code"
+          value={promotion?.code || ''}
+          onChange={(e) => setPromotion(promotion ? { ...promotion, code: e.target.value } : null)}
           required
         />
         <Input
           placeholder="Description"
-          value={promotion.description}
-          onChange={(e) => setPromotion({ ...promotion, description: e.target.value })}
+          value={promotion?.description || ''}
+          onChange={(e) => setPromotion(promotion ? { ...promotion, description: e.target.value } : null)}
           required
         />
         <Select 
-          value={promotion.discountType} 
-          onValueChange={(value: 'percentage' | 'fixed') => setPromotion({ ...promotion, discountType: value })}
+          value={promotion?.discountType || 'percentage'} 
+          onValueChange={(value: 'percentage' | 'fixed') => setPromotion(promotion ? { ...promotion, discountType: value } : null)}
         >
           <SelectTrigger>
             <SelectValue placeholder="Discount Type" />
@@ -105,52 +107,32 @@ export default function EditPromotionPage({ params }: { params: { id: string } }
         <Input
           type="number"
           placeholder="Discount Value"
-          value={promotion.discountValue}
-          onChange={(e) => setPromotion({ ...promotion, discountValue: Number(e.target.value) })}
+          value={promotion?.discountValue || 0}
+          onChange={(e) => setPromotion(promotion ? { ...promotion, discountValue: parseFloat(e.target.value) } : null)}
           required
         />
         <Input
           type="date"
           placeholder="Start Date"
-          value={promotion.startDate.split('T')[0]}
-          onChange={(e) => setPromotion({ ...promotion, startDate: e.target.value })}
+          value={promotion?.startDate || ''}
+          onChange={(e) => setPromotion(promotion ? { ...promotion, startDate: e.target.value } : null)}
           required
         />
         <Input
           type="date"
           placeholder="End Date"
-          value={promotion.endDate.split('T')[0]}
-          onChange={(e) => setPromotion({ ...promotion, endDate: e.target.value })}
+          value={promotion?.endDate || ''}
+          onChange={(e) => setPromotion(promotion ? { ...promotion, endDate: e.target.value } : null)}
           required
         />
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="isActive"
-            checked={promotion.isActive}
-            onCheckedChange={(checked) => setPromotion({ ...promotion, isActive: checked as boolean })}
-          />
-          <label
-            htmlFor="isActive"
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          >
-            Is Active
-          </label>
-        </div>
-        <Input
-          type="number"
-          placeholder="Minimum Purchase Amount"
-          value={promotion.minimumPurchaseAmount}
-          onChange={(e) => setPromotion({ ...promotion, minimumPurchaseAmount: Number(e.target.value) })}
-        />
-        <Input
-          type="number"
-          placeholder="Usage Limit"
-          value={promotion.usageLimit}
-          onChange={(e) => setPromotion({ ...promotion, usageLimit: Number(e.target.value) })}
-        />
-        <Button type="submit">Update Promotion</Button>
+        <Checkbox
+          checked={promotion?.isActive || false}
+          onCheckedChange={(checked) => setPromotion(promotion ? { ...promotion, isActive: checked === true } : null)}
+        >
+          Active
+        </Checkbox>
+        <Button type="submit">Save</Button>
       </form>
     </div>
   )
 }
-
