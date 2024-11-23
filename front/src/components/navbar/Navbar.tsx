@@ -84,7 +84,7 @@ export default function Navbar() {
             </Link>
           </div>
           <div className="hidden md:flex items-center space-x-4">
-            <NavLink href="/" icon={Home}>
+            <NavLink href="/pages/HomePage" icon={Home}>
               Inicio
             </NavLink>
             <NavLink href="/pages/store" icon={ShoppingBag}>
@@ -143,10 +143,14 @@ export default function Navbar() {
             variants={menuVariants}
           >
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-800">
-              <NavLink href="/" icon={Home} onClick={toggleMenu}>
+              <NavLink href="/pages/HomePage" icon={Home} onClick={toggleMenu}>
                 Inicio
               </NavLink>
-              <NavLink href="/pages/store" icon={ShoppingBag} onClick={toggleMenu}>
+              <NavLink
+                href="/pages/store"
+                icon={ShoppingBag}
+                onClick={toggleMenu}
+              >
                 Tienda
               </NavLink>
               <NavLink href="/pages/about" icon={Info} onClick={toggleMenu}>
@@ -162,4 +166,3 @@ export default function Navbar() {
     </nav>
   );
 }
-
