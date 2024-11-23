@@ -5,7 +5,14 @@ import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 
 export default function AdminUsersPage() {
-  const [users, setUsers] = useState([]);
+  interface User {
+    _id: string;
+    name: string;
+    email: string;
+    isAdmin: boolean;
+  }
+
+  const [users, setUsers] = useState<User[]>([]);
   const { data: session, status } = useSession();
   const router = useRouter();
 

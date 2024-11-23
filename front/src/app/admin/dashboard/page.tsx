@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
@@ -16,8 +16,6 @@ const sections = [
 ];
 
 export default function AdminDashboardPage() {
-  const [activeSection, setActiveSection] = useState("");
-  const [error, setError] = useState<string | null>(null);
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -36,16 +34,11 @@ export default function AdminDashboardPage() {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>{error}</div>;
-  }
-
   return (
     <div className="min-h-screen bg-gray-100">
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <motion.div
-            key={activeSection}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -60,9 +53,7 @@ export default function AdminDashboardPage() {
               className="mb-4"
             />
             <h2 className="text-3xl font-bold text-white text-center px-4">
-              {activeSection
-                ? `${activeSection} Dashboard`
-                : "Welcome to the Admin Dashboard"}
+              Welcome to the Admin Dashboard
             </h2>
           </motion.div>
         </div>
