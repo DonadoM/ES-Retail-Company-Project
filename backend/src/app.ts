@@ -120,7 +120,6 @@ app.get("/", (req, res) => {
             <li><a href="/api/inventory">/api/inventory</a> - Gestión de inventario</li>
             <li><a href="/api/supply-chain">/api/supply-chain</a> - Gestión de cadena de suministro</li>
             <li><a href="/api/users">/api/users</a> - Gestión de usuarios</li>
-            <li><a href="/api/admin">/api/admin</a> - Gestión de administradores</li>
             <li><a href="/api/promotions">/api/promotions</a> - Gestión de promociones</li>
           </ul>
           <footer>
