@@ -11,4 +11,13 @@ module.exports = {
   collectCoverage: true,
   coverageDirectory: "coverage",
   coverageReporters: ["json", "lcov", "text", "clover"],
+  reporters: [
+    [
+      "jest-junit", // Reporter JUnit
+      {
+        outputDirectory: "coverage", // Carpeta de salida para el reporte
+        outputName: "junit-report.xml", // Nombre del archivo de reporte
+      },
+    ],
+  ],
 };
