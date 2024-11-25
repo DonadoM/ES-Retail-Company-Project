@@ -9,7 +9,6 @@ import inventoryRoutes from "./routes/inventoryRoutes";
 import supplyChainRoutes from "./routes/supplyChainRoutes";
 import promotionRoutes from "./routes/promotionRoutes";
 // import userRoutes from "./routes/userRoutes";
-import adminRoutes from "./routes/adminRoutes"; // Importar las rutas de admin
 import uploadRoutes from "./routes/uploadRoutes";
 import cloudinary from "cloudinary";
 
@@ -53,7 +52,6 @@ app.use("/api/inventory", inventoryRoutes);
 app.use("/api/supply-chain", supplyChainRoutes);
 app.use("/api/promotions", promotionRoutes);
 // app.use("/api/users", userRoutes);
-app.use("/api/admin", adminRoutes); // Usar las rutas de admin
 
 // Ruta principal para la vista de bienvenida
 app.get("/", (req, res) => {
