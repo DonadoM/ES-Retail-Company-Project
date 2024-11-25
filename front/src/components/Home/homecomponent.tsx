@@ -8,7 +8,6 @@ import {
   useTransform,
   useSpring,
   useAnimation,
- 
 } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { colors } from "../../lib/colors";
@@ -16,7 +15,7 @@ import { FeatureCard } from "./FeaturedCard";
 
 const AnimatedText: React.FC<{ children: React.ReactNode; delay?: number }> = ({
   children,
-  delay = 2,
+  delay = 0,
 }) => {
   const controls = useAnimation();
   const ref = useRef(null);

@@ -42,3 +42,4 @@ coverage/
 # Otros archivos de configuración y cache
 .cache/
 .parcel-cache/
+.sonar
