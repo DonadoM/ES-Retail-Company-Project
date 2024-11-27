@@ -62,7 +62,7 @@ export default function AdminDashboard() {
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
             className="bg-[#1F2937] shadow-md"
-          >
+          > 
             <ScrollArea className="h-[calc(100vh-4rem)]">
               {sections.map((section) => (
                 <Link
