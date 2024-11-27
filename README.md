@@ -1,7 +1,7 @@
 # **Retail Management System** 📦
 
 **Descripción**  
-Este proyecto es una aplicación full-stack para la gestión de una gran compañía de retail. Proporciona funcionalidades para manejar productos, clientes, pedidos, promociones, cadena de suministro. Está construido utilizando **Next.js** en el frontend, **Express** en el backend, y **MongoDB** como base de datos, con una arquitectura basada en microservicios
+Este proyecto es una aplicación para la gestión de una gran compañía de retail. Proporciona funcionalidades para manejar productos, clientes, pedidos, promociones, cadena de suministro. Está construido utilizando **Next.js** en el frontend, **Express** en el backend, y **MongoDB** como base de datos, con una arquitectura basada en microservicios empleando distintos patrones de diseño
 
 ## **Tabla de Contenidos**
 
@@ -33,8 +33,9 @@ Este proyecto es una aplicación full-stack para la gestión de una gran compañ
 - **Componentes UI**: [Radix UI](https://www.radix-ui.com/), [Tailwind CSS](https://tailwindcss.com/)
 - **Íconos**: [React Icons](https://react-icons.github.io/react-icons/)
 - **Autenticación**: [JWT (JSON Web Tokens)](https://jwt.io/)
-
+- **Google Providers**: [Google Authentication]: (https://console.cloud.google.com/)
 ## **Requisitos Previos** ✅
+
 
 Antes de comenzar, asegúrate de tener lo siguiente instalado en tu máquina:
 
@@ -92,16 +93,21 @@ Crea un archivo .env tanto en el backend como en el frontend con las variables n
 Accede al sistema desde tu navegador en http://localhost:3000.
 Utiliza la barra lateral para navegar entre las diferentes secciones de la aplicación (productos, clientes, pedidos, etc.).
 En cada sección, puedes realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar).
-Estructura del Proyecto 📂
+
 bash
 Copiar código
 
 
-## Contribuciones 🛠️
-Las contribuciones son bienvenidas. Si deseas contribuir al proyecto, sigue estos pasos:
 
-## Haz un fork del repositorio.
--Crea una rama con la nueva funcionalidad (git checkout -b feature/nueva-funcionalidad).
--Realiza los cambios y haz commits descriptivos.
--Haz un push a tu rama (git push origin feature/nueva-funcionalidad).
--Abre un Pull Request en GitHub.
+# Frontend desplegado 🚀
+https://4fwears.vercel.app/
+
+
+# Backend Desplegado 🚀
+https://backend-service-9xuv.onrender.com/
+
+# Para las Variables de entorno de Google Cloud Consolo se debe crear una cuenta y generar las variables de entorno dentro de la cuenta
+
+
+
+
