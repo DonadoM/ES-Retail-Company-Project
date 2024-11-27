@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 
 const sections = [
   { name: "Products", path: "/admin/products" },
-  { name: "Customers", path: "/admin/customers" },
+  { name: "Customers", path: "/admin/customer" },
   { name: "Inventory", path: "/admin/inventory" },
   { name: "Orders", path: "/admin/orders" },
   { name: "Supply Chain", path: "/admin/supply-chain" },
@@ -62,7 +62,7 @@ export default function AdminDashboard() {
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
             className="bg-[#1F2937] shadow-md"
-          > 
+          >
             <ScrollArea className="h-[calc(100vh-4rem)]">
               {sections.map((section) => (
                 <Link
